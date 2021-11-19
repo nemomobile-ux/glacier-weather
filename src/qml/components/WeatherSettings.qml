@@ -53,28 +53,75 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Nemo 1.0
 import QtQuick.Controls.Styles.Nemo 1.0
 
+import WeatherInfo 1.0
+
 Item {
 
+    Settings  {
+        id: settingsStorage;
+    }
 
     property bool imperialUnits: false;
     property int windUnits: 1 // Mph, m/s, km/h, kt
     property alias places: placesModel
     property int selectedCity: 0
+    property bool settingsReady: false
 
     signal placesModelChanged()
 
     ListModel {
         id: placesModel
-        ListElement { city: "Brisbane"; useGps: false }
-        ListElement { city: "Oslo"; useGps: false  }
-        ListElement { city: "Helsinki"; useGps: false  }
-        ListElement { city: "New York"; useGps: false  }
-        ListElement { city: qsTr("Current position"); useGps: true }
 
         onCountChanged: {
-            placesModelChanged()
+            if (settingsReady) {
+                settingsSavePlacesModel();
+                placesModelChanged()
+            }
         }
     }
 
+    onWindUnitsChanged: {
+        if (settingsReady) {
+            settingsStorage.setValue("windUnits", windUnits)
+        }
+    }
+
+    onImperialUnitsChanged: {
+        if (settingsReady) {
+            settingsStorage.setValue("imperialUnits", imperialUnits)
+        }
+    }
+
+    function settingsSavePlacesModel() {
+        var citiesArr = []
+        for (var i = 0; i < placesModel.count; i++) {
+            var item = placesModel.get(i)
+            if (item.useGps) {
+                continue;
+            }
+            citiesArr.push(item.city);
+        }
+
+        var json_string = JSON.stringify(citiesArr)
+        settingsStorage.setValue("cities", json_string)
+
+    }
+
+    function settingsLoadPlacesModel() {
+        placesModel.clear();
+        var json = settingsStorage.value("cities", "[]");
+        var citiesArray = JSON.parse(json);
+        for (var i = 0; i < citiesArray.length; i++) {
+            placesModel.append({city: citiesArray[i], useGps: false})
+        }
+        placesModel.append({city: qsTr("Current position"), useGps: true})
+    }
+
+    Component.onCompleted: {
+        settingsLoadPlacesModel();
+        windUnits     = settingsStorage.value("windUnits", 1)
+        imperialUnits =  settingsStorage.value("imperialUnits", false)
+        settingsReady = true;
+    }
 
 }

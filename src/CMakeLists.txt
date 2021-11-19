@@ -2,7 +2,7 @@ set(SRC
     main.cpp
     appmodel.cpp
     placesmodel.cpp
-    settingsmodel.cpp
+    settings.cpp
     weatherdata.cpp
 )
 

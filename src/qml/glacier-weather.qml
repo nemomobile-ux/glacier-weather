@@ -67,49 +67,13 @@ ApplicationWindow{
 
     }
 
-
-//    state: "loading"
-
-//    states: [
-//        State {
-//            name: "loading"
-//            PropertyChanges { target: main; opacity: 0 }
-//            PropertyChanges { target: wait; opacity: 1 }
-//        },
-//        State {
-//            name: "ready"
-//            PropertyChanges { target: main; opacity: 1 }
-//            PropertyChanges { target: wait; opacity: 0 }
-//        }
-//    ]
-
-    SettingsModel  {
-        id: settings;
-    }
-
     PlacesModel {
         id: placesModel
     }
 
-
     AppModel {
         id: model
-//            if (model.ready)
-//                window.state = "ready"
-//            else
-//                window.state = "loading"
     }
-//    Item {
-//        id: wait
-//        anchors.fill: parent
-
-//        Text {
-//            text: "Loading weather data..."
-//            anchors.centerIn: parent
-//            font.pointSize: 18
-//        }
-//    }
-
     
     
 }

@@ -23,7 +23,7 @@ Page {
                 iconSource: "image://theme/plus"
                 onClicked: {
                     addDialog.open()
-
+                    addTextField.forceActiveFocus()
                 }
             }
         ]
@@ -50,6 +50,9 @@ Page {
                 id: addTextField
                 placeholderText: qsTr("Enter name of city");
                 width: parent.width - gpsIcon.width - Theme.itemSpacingLarge
+                onAccepted: {
+                    addDialog.accepted();
+                }
             },
             NemoIcon {
                 id: gpsIcon
@@ -64,6 +67,8 @@ Page {
                     onClicked: {
                         addTextField.text = qsTr("Trying to get position ...")
                         placesModel.update();
+                        addTextField.forceActiveFocus()
+
                     }
                 }
             }

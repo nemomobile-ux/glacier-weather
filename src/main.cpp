@@ -65,7 +65,7 @@
 #include "appmodel.h"
 #include "weatherdata.h"
 #include "placesmodel.h"
-#include "settingsmodel.h"
+#include "settings.h"
 
 int main(int argc, char *argv[])
 {
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<WeatherData>("WeatherInfo", 1, 0, "WeatherData");
     qmlRegisterType<AppModel>("WeatherInfo", 1, 0, "AppModel");
     qmlRegisterType<PlacesModel>("WeatherInfo", 1, 0, "PlacesModel");
-    qmlRegisterType<SettingsModel>("WeatherInfo", 1, 0, "SettingsModel");
+    qmlRegisterType<Settings>("WeatherInfo", 1, 0, "Settings");
 
 
     QQuickWindow *window = GlacierApp::showWindow();
