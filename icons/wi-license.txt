@@ -1,0 +1,2 @@
+weather icons are licensed under OFL-1.1
+see https://erikflowers.github.io/weather-icons/

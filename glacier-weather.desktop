@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Icon=/usr/share/glacier-weather/icons/glacier-weather.png
+Exec=/usr/bin/glacier-weather
+Name=Weather
+Name[cs]=Počasí
