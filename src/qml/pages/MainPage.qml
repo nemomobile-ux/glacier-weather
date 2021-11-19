@@ -42,6 +42,7 @@ Page {
         function updateWeatherModel() {
             var item = settings.places.get(settings.selectedCity);
             if (item.useGps) {
+                model.city = gpsCity
                 placesModel.update();
             } else {
                 model.city = item.city;
