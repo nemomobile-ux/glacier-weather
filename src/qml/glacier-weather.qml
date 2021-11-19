@@ -57,6 +57,7 @@ import QtQuick.Controls.Nemo 1.0
 import QtQuick.Controls.Styles.Nemo 1.0
 
 import "pages"
+import "components"
 
 import WeatherInfo 1.0
 
@@ -75,5 +76,34 @@ ApplicationWindow{
         id: model
     }
     
+    WeatherSettings {
+        id: settings;
+        onSelectedCityChanged: updateWeatherModel();
+        onPlacesModelChanged:  updateWeatherModel();
+
+        property string gpsCity: ""
+        onGpsCityChanged: {
+            model.city = gpsCity
+        }
+
+        function updateWeatherModel() {
+            var item = settings.places.get(settings.selectedCity);
+            if (item.useGps) {
+                model.city = gpsCity
+                placesModel.update();
+            } else {
+                model.city = item.city;
+            }
+        }
+
+        Component.onCompleted: updateWeatherModel();
+    }
+
+    Binding {
+        target: settings
+        property: "gpsCity"
+        value: placesModel.city
+    }
+
     
 }

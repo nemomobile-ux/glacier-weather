@@ -29,40 +29,6 @@ Page {
         ]
     }
 
-    WeatherSettings {
-        id: settings;
-        onSelectedCityChanged: updateWeatherModel();
-        onPlacesModelChanged:  updateWeatherModel();
-
-        property string gpsCity: ""
-        onGpsCityChanged: {
-            model.city = gpsCity
-        }
-
-        function updateWeatherModel() {
-            var item = settings.places.get(settings.selectedCity);
-            if (item.useGps) {
-                model.city = gpsCity
-                placesModel.update();
-            } else {
-                model.city = item.city;
-            }
-        }
-
-        Component.onCompleted: updateWeatherModel();
-
-
-    }
-
-    Binding {
-        target: settings
-        property: "gpsCity"
-        value: placesModel.city
-    }
-
-
-
-
     Item {
         id: main
         anchors.fill: parent

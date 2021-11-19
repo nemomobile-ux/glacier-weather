@@ -167,6 +167,10 @@ void AppModel::refreshWeather()
     query.addQueryItem("q", d->city);
     query.addQueryItem("mode", "json");
     query.addQueryItem("APPID", d->app_ident);
+//    query.addQueryItem("lang", "cs");
+    query.addQueryItem("units", "standard"); // kelvin
+//    query.addQueryItem("units", "metric");
+//    query.addQueryItem("units", "imperial");
     url.setQuery(query);
 
     QNetworkReply *rep = d->nam->get(QNetworkRequest(url));
@@ -231,6 +235,7 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
     query.addQueryItem("q", d->city);
     query.addQueryItem("mode", "json");
     query.addQueryItem("cnt", "5");
+//    query.addQueryItem("lang", "cs");
     query.addQueryItem("APPID", d->app_ident);
     url.setQuery(query);
 
