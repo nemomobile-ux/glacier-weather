@@ -34,15 +34,31 @@ Page {
         onSelectedCityChanged: updateWeatherModel();
         onPlacesModelChanged:  updateWeatherModel();
 
+        property string gpsCity: ""
+        onGpsCityChanged: {
+            model.city = gpsCity
+        }
+
         function updateWeatherModel() {
             var item = settings.places.get(settings.selectedCity);
-            if (!item.useGps) {
+            if (item.useGps) {
+                placesModel.update();
+            } else {
                 model.city = item.city;
             }
-
-            model.useGps = item.useGps;
         }
+
+        Component.onCompleted: updateWeatherModel();
+
+
     }
+
+    Binding {
+        target: settings
+        property: "gpsCity"
+        value: placesModel.city
+    }
+
 
 
 
@@ -64,7 +80,7 @@ Page {
                 color: "transparent"
 
                 Text {
-                    text: (model.hasValidCity ? model.city : "Unknown location") + (model.useGps ? " (GPS)" : "")
+                    text: (model.hasValidCity ? model.city : "Unknown location") + (settings.places.get(settings.selectedCity).useGps ? " (GPS)" : "")
                     anchors.fill: parent
                     anchors.margins: Theme.itemSpacingLarge
 

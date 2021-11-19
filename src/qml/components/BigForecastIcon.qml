@@ -96,7 +96,6 @@ Rectangle {
             font.pixelSize: Theme.fontSizeExtraLarge
         }
         Text {
-            text: current.bottomText
             color: pressed ? Theme.accentColor : Theme.textColor
             font.pixelSize: Theme.fontSizeLarge
             wrapMode: Text.WordWrap

@@ -9,7 +9,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/MainPage.qml" line="110"/>
+        <location filename="../src/qml/pages/MainPage.qml" line="126"/>
         <source>No weather data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17,35 +17,40 @@
 <context>
     <name>PlacesPage</name>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="17"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="19"/>
         <source>Places</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="41"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="43"/>
         <source>Add place</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="43"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="45"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="44"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="46"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="52"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="51"/>
         <source>Enter name of city</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="65"/>
+        <source>Trying to get position ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="85"/>
+        <location filename="../src/main.cpp" line="90"/>
         <source>Weather</source>
         <translation type="unfinished"></translation>
     </message>

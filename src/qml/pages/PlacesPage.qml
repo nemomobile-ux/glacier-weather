@@ -5,6 +5,8 @@ import QtQuick.Controls.Nemo 1.0
 import QtQuick.Controls.Styles.Nemo 1.0
 import Nemo.Dialogs 1.0
 
+import WeatherInfo 1.0
+
 import "../components"
 
 Page {
@@ -36,7 +38,7 @@ Page {
 
     CustomDialog {
         id: addDialog
-//        inline: false;
+        //        inline: false;
         icon: "image://theme/map-marked"
         headingText: qsTr("Add place")
         visible: false;
@@ -44,16 +46,25 @@ Page {
         cancelText: qsTr("Cancel")
         acceptEnabled: addTextField.text.length >= 2
         content: [
-            Column {
-                width: parent.width
-                spacing: Theme.itemSpacingHuge
-                TextField {
-                    id: addTextField
-                    placeholderText: qsTr("Enter name of city");
-                    width: parent.width
-                }
-                Button {
-                    text: "TODO: from GPS"
+            TextField {
+                id: addTextField
+                placeholderText: qsTr("Enter name of city");
+                width: parent.width - gpsIcon.width - Theme.itemSpacingLarge
+            },
+            NemoIcon {
+                id: gpsIcon
+                anchors.right: parent.right;
+                height: addTextField.height
+                width: height
+                source: "image://theme/satellite"
+                color:  gpsIconMouse.pressed ? Theme.accentColor : Theme.textColor
+                MouseArea {
+                    id: gpsIconMouse
+                    anchors.fill:parent;
+                    onClicked: {
+                        addTextField.text = qsTr("Trying to get position ...")
+                        placesModel.update();
+                    }
                 }
             }
 
@@ -64,11 +75,18 @@ Page {
             settingsObject.places.insert(0, {city: addTextField.text, useGps: false})
             addDialog.close()
 
+
         }
         onCanceled: {
             addDialog.close()
         }
 
+    }
+
+    Binding {
+        target: addTextField
+        property: "text"
+        value: placesModel.city
     }
 
     ListView {

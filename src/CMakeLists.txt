@@ -1,6 +1,9 @@
 set(SRC 
     main.cpp
     appmodel.cpp
+    placesmodel.cpp
+    settingsmodel.cpp
+    weatherdata.cpp
 )
 
 add_executable(glacier-weather ${SRC})

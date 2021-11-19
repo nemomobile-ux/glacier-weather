@@ -83,14 +83,21 @@ ApplicationWindow{
 //        }
 //    ]
 
+    SettingsModel  {
+        id: settings;
+    }
+
+    PlacesModel {
+        id: placesModel
+    }
+
+
     AppModel {
         id: model
-        onReadyChanged: {
 //            if (model.ready)
 //                window.state = "ready"
 //            else
 //                window.state = "loading"
-        }
     }
 //    Item {
 //        id: wait
