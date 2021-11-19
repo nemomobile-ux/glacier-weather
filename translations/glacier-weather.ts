@@ -41,11 +41,6 @@
         <source>Enter name of city</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="56"/>
-        <source>TODO: from GPS</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -63,32 +58,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="24"/>
-        <source>Imperial units</source>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="35"/>
+        <source>Celsius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="30"/>
-        <source>Donate money</source>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="38"/>
+        <source>Fahrenheit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="45"/>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="59"/>
         <source>Mph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="48"/>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="62"/>
         <source>m/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="51"/>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="65"/>
         <source>km/h</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="54"/>
+        <location filename="../src/qml/pages/SettingsPage.qml" line="68"/>
         <source>knots</source>
         <translation type="unfinished"></translation>
     </message>

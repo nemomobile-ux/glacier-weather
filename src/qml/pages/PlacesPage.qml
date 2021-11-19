@@ -53,7 +53,7 @@ Page {
                     width: parent.width
                 }
                 Button {
-                    text: qsTr("TODO: from GPS")
+                    text: "TODO: from GPS"
                 }
             }
 
