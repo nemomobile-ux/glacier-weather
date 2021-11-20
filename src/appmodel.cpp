@@ -68,9 +68,41 @@
 
 #define ZERO_KELVIN 273.15
 
-static QString niceTemperatureString(double t)
+static QString niceTemperatureString(int temperatureUnits, double t)
 {
-    return QString::number(qRound(t-ZERO_KELVIN)) + QChar(0xB0);
+    double fh;
+    switch (temperatureUnits) {
+    case 2: // farnheit
+        fh = (t - ZERO_KELVIN) * 1.8 + 32;
+        return QString::number(qRound(fh)) + QChar(0xB0);
+    case 1: // celsius
+        return QString::number(qRound(t - ZERO_KELVIN)) + QChar(0xB0);
+    case 0: // kelvin
+    default:
+        return QString::number(qRound(t));
+        break;
+    }
+}
+
+/**
+ * @brief speedConvert convert wind speed from m/s to taret unit
+ * @param windUnits 0 = mph, 1 = m/s, 2 =  km/h, 3= kt
+ * @param s speed
+ * @return converted value
+ */
+
+static double speedConvert(int units, double s) {
+    switch (units) {
+    case 0: // Mph
+        return s * 2.23693629;
+    case 2: // km/h
+        return s * 3.6;;
+    case 3: // kt
+        return s * 1.94384449;
+    default:
+    case 1: // m/s
+        return s;
+    }
 }
 
 
@@ -86,6 +118,9 @@ public:
     bool ready;
     int nErrors;
     int minMsBeforeNewRequest;
+    int temperatureUnits;
+    int windUnits;
+
     QTimer requestNewWeatherTimer;
 
     QString app_ident;
@@ -96,7 +131,9 @@ public:
         fcProp(NULL),
         ready(false),
         nErrors(0),
-        minMsBeforeNewRequest(baseMsBeforeNewRequest)
+        minMsBeforeNewRequest(baseMsBeforeNewRequest),
+        temperatureUnits(0),
+        windUnits(0)
     {
         requestNewWeatherTimer.setSingleShot(false);
         requestNewWeatherTimer.setInterval(20*60*1000); // 20 min
@@ -169,8 +206,6 @@ void AppModel::refreshWeather()
     query.addQueryItem("APPID", d->app_ident);
 //    query.addQueryItem("lang", "cs");
     query.addQueryItem("units", "standard"); // kelvin
-//    query.addQueryItem("units", "metric");
-//    query.addQueryItem("units", "imperial");
     url.setQuery(query);
 
     QNetworkReply *rep = d->nam->get(QNetworkRequest(url));
@@ -212,9 +247,9 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
                 val = obj.value(QStringLiteral("wind"));
                 tempObject = val.toObject();
                 val = tempObject.value(QStringLiteral("speed"));
-                d->now.setWindSpeed(QString::number(qRound(val.toDouble())));
+                d->now.setWindSpeed(QString::number(qRound( speedConvert(d->windUnits, val.toDouble()) )));
                 val = tempObject.value(QStringLiteral("gust"));
-                d->now.setWindGusts(QString::number(qRound(val.toDouble())));
+                d->now.setWindGusts(QString::number(qRound( speedConvert(d->windUnits, val.toDouble()) )));
                 val = tempObject.value(QStringLiteral("deg"));
                 d->now.setWindDirection(QString::number(qRound(val.toDouble())));
             }
@@ -222,7 +257,7 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
                 val = obj.value(QStringLiteral("main"));
                 tempObject = val.toObject();
                 val = tempObject.value(QStringLiteral("temp"));
-                d->now.setTemperature(niceTemperatureString(val.toDouble()));
+                d->now.setTemperature(niceTemperatureString(d->temperatureUnits, val.toDouble()));
             }
         }
     }
@@ -276,17 +311,17 @@ void AppModel::handleForecastNetworkData(QNetworkReply *networkReply)
             jo = subtree.value(QStringLiteral("temp")).toObject();
             jv = jo.value(QStringLiteral("min"));
             data.clear();
-            data += niceTemperatureString(jv.toDouble());
+            data += niceTemperatureString(d->temperatureUnits, jv.toDouble());
             data += QChar('/');
             jv = jo.value(QStringLiteral("max"));
-            data += niceTemperatureString(jv.toDouble());
+            data += niceTemperatureString(d->temperatureUnits, jv.toDouble());
             forecastEntry->setTemperature(data);
 
             jv = subtree.value(QStringLiteral("speed"));
-            forecastEntry->setWindSpeed(QString::number(jv.toDouble()));
+            forecastEntry->setWindSpeed(QString::number( speedConvert(d->windUnits, jv.toDouble()) ));
 
             jv = subtree.value(QStringLiteral("gust"));
-            forecastEntry->setWindGusts(QString::number(jv.toDouble()));
+            forecastEntry->setWindGusts(QString::number( speedConvert(d->windUnits, jv.toDouble()) ));
 
             jv = subtree.value(QStringLiteral("deg"));
             forecastEntry->setWindDirection(QString::number(jv.toDouble()));
@@ -345,4 +380,24 @@ void AppModel::setCity(const QString &value)
     d->city = value;
     emit cityChanged();
     refreshWeather();
+}
+
+int AppModel::temperatureUnits() {
+    return d->temperatureUnits;
+}
+
+void AppModel::setTemperatureUnits(int &value) {
+    d->temperatureUnits = value;
+    refreshWeather();
+    emit temperatureUnitsChanged();
+}
+
+int AppModel::windUnits() {
+    return d->windUnits;
+}
+
+void AppModel::setWindUnits(int &value) {
+    d->windUnits = value;
+    refreshWeather();
+    emit windUnitsChanged();
 }

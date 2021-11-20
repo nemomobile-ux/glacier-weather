@@ -74,6 +74,8 @@ ApplicationWindow{
 
     AppModel {
         id: model
+        temperatureUnits: settings.temperatureUnits
+        windUnits: settings.windUnits
     }
     
     WeatherSettings {

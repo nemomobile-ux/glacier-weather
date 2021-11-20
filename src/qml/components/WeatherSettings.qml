@@ -61,13 +61,30 @@ Item {
         id: settingsStorage;
     }
 
-    property bool imperialUnits: false;
+    property int temperatureUnits: 1; // Kelvin, Celsius, Farnheit
     property int windUnits: 1 // Mph, m/s, km/h, kt
     property alias places: placesModel
+    property alias speedUnitsOptions: speedUnitModel
+    property alias temperatureUnitsOptions: temperatureUnitModel
     property int selectedCity: 0
     property bool settingsReady: false
 
     signal placesModelChanged()
+
+    ListModel {
+        id: speedUnitModel
+        ListElement { name: qsTr("Miles"); shortname: qsTr("Mph"); }
+        ListElement { name: qsTr("Meters per seconds"); shortname: qsTr("m/s"); }
+        ListElement { name: qsTr("Kilometers per hour"); shortname: qsTr("km/h"); }
+        ListElement { name: qsTr("Knots"); shortname: qsTr("kt"); }
+    }
+
+    ListModel {
+        id: temperatureUnitModel
+        ListElement { name: qsTr("Kelvin"); shortname: qsTr("K"); }
+        ListElement { name: qsTr("Celsius"); shortname: qsTr("°C"); }
+        ListElement { name: qsTr("Fahrenheit"); shortname: qsTr("°F"); }
+    }
 
     ListModel {
         id: placesModel
@@ -86,9 +103,9 @@ Item {
         }
     }
 
-    onImperialUnitsChanged: {
+    onTemperatureUnitsChanged: {
         if (settingsReady) {
-            settingsStorage.setValue("imperialUnits", imperialUnits)
+            settingsStorage.setValue("temperatureUnits", temperatureUnits)
         }
     }
 
@@ -120,7 +137,7 @@ Item {
     Component.onCompleted: {
         settingsLoadPlacesModel();
         windUnits     = settingsStorage.value("windUnits", 1)
-        imperialUnits =  settingsStorage.value("imperialUnits", false)
+        temperatureUnits =  parseInt(settingsStorage.value("temperatureUnits", 1))
         settingsReady = true;
     }
 

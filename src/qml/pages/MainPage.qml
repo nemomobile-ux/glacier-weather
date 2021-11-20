@@ -85,7 +85,7 @@ Page {
                            ? model.weather.windDirection + "° "
                            : "")
                 windSpeedText:(model.hasValidWeather
-                               ?  model.weather.windSpeed + " m/s"
+                               ?  model.weather.windSpeed + " " + settings.speedUnitsOptions.get(settings.windUnits).shortname
                                : "")
 
                 bottomText: (model.hasValidWeather

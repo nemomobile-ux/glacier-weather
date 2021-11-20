@@ -29,17 +29,10 @@ Page {
 
             ButtonRow {
                 anchors.margins: Theme.itemSpacingMedium
-                currentIndex: settingsObject.imperialUnits ? 0 : 1
-                model: ListModel {
-                    ListElement {
-                        name: qsTr("Celsius")
-                    }
-                    ListElement {
-                        name: qsTr("Fahrenheit")
-                    }
-                }
+                currentIndex: settingsObject.temperatureUnits
+                model: settingsObject.temperatureUnitsOptions
                 onCurrentIndexChanged: {
-                    settingsObject.imperialUnits = (currentIndex == 0)
+                    settingsObject.temperatureUnits = currentIndex
                 }
             }
         }
@@ -54,20 +47,7 @@ Page {
             ButtonRow {
                 anchors.margins: Theme.itemSpacingMedium
                 currentIndex: settingsObject.windUnits
-                model: ListModel {
-                    ListElement {
-                        name: qsTr("Mph")
-                    }
-                    ListElement {
-                        name: qsTr("m/s")
-                    }
-                    ListElement {
-                        name: qsTr("km/h")
-                    }
-                    ListElement {
-                        name: qsTr("knots")
-                    }
-                }
+                model: settingsObject.speedUnitsOptions
                 onCurrentIndexChanged: {
                     settingsObject.windUnits = currentIndex;
                 }

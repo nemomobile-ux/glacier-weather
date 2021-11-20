@@ -80,6 +80,9 @@ class AppModel : public QObject
                READ forecast
                NOTIFY weatherChanged)
 
+    Q_PROPERTY(int temperatureUnits READ temperatureUnits WRITE setTemperatureUnits NOTIFY temperatureUnitsChanged)
+    Q_PROPERTY(int windUnits READ windUnits WRITE setWindUnits NOTIFY windUnitsChanged)
+
 public:
     explicit AppModel(QObject *parent = 0);
     ~AppModel();
@@ -94,6 +97,13 @@ public:
     WeatherData *weather() const;
     QQmlListProperty<WeatherData> forecast() const;
 
+    int temperatureUnits();
+    void setTemperatureUnits(int &value);
+
+    int windUnits();
+    void setWindUnits(int &value);
+
+
 public slots:
     Q_INVOKABLE void refreshWeather();
 
@@ -104,6 +114,8 @@ private slots:
 signals:
     void weatherChanged();
     void cityChanged();
+    void temperatureUnitsChanged();
+    void windUnitsChanged();
 
 
 private:
