@@ -6,6 +6,7 @@
 #include <qnmeapositioninfosource.h>
 #include <qgeopositioninfo.h>
 
+#include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
 #include <QElapsedTimer>
@@ -27,6 +28,7 @@ signals:
 
 public slots:
     QString city();
+    void queryCity();
     void positionUpdated(QGeoPositionInfo gpsPos);
     void positionError(QGeoPositionInfoSource::Error e);
     void handleGeoNetworkData(QNetworkReply *networkReply);
@@ -47,11 +49,6 @@ private:
     QString app_ident;
     int nErrors;
     static const int baseMsBeforeNewRequest = 5 * 1000; // 5 s, increased after each missing answer up to 10x
-
-
-    void queryCity();
-
-
 
 signals:
 
