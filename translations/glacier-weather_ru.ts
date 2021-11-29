@@ -7,7 +7,7 @@
         <translation>Погода</translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/MainPage.qml" line="126"/>
+        <location filename="../src/qml/pages/MainPage.qml" line="93"/>
         <source>No weather data</source>
         <translation>Нет данных о погоде</translation>
     </message>
@@ -40,7 +40,7 @@
         <translation>Введите имя города</translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/PlacesPage.qml" line="65"/>
+        <location filename="../src/qml/pages/PlacesPage.qml" line="68"/>
         <source>Trying to get position ...</source>
         <translation>Пытаюсь уточнить местоположение ...</translation>
     </message>
@@ -60,41 +60,81 @@
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="35"/>
-        <source>Celsius</source>
-        <translation>Цесльсий</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="38"/>
-        <source>Fahrenheit</source>
-        <translation>Фаренгейт</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="59"/>
-        <source>Mph</source>
-        <translation>Миль/ч</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="62"/>
-        <source>m/s</source>
-        <translation>м/с</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="65"/>
-        <source>km/h</source>
-        <translation>км/ч</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="68"/>
-        <source>knots</source>
-        <translation>узлы</translation>
-    </message>
 </context>
 <context>
     <name>WeatherSettings</name>
     <message>
-        <location filename="../src/qml/components/WeatherSettings.qml" line="72"/>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="76"/>
+        <source>Miles</source>
+        <translation>Мили</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="76"/>
+        <source>Mph</source>
+        <translation>Миль/Ч</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="77"/>
+        <source>Meters per seconds</source>
+        <translation>Метры в секунду</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="77"/>
+        <source>m/s</source>
+        <translation>м/с</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="78"/>
+        <source>Kilometers per hour</source>
+        <translation>Киллометры в час</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="78"/>
+        <source>km/h</source>
+        <translation>км/ч</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="79"/>
+        <source>Knots</source>
+        <translation>Узлы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="79"/>
+        <source>kt</source>
+        <translation>уз</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="84"/>
+        <source>Kelvin</source>
+        <translation>Кльвин</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="84"/>
+        <source>K</source>
+        <translation>K</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="85"/>
+        <source>Celsius</source>
+        <translation>Цельсий</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="85"/>
+        <source>°C</source>
+        <translation>°C</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="86"/>
+        <source>Fahrenheit</source>
+        <translation>Фаренгейт</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="86"/>
+        <source>°F</source>
+        <translation>°F</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="134"/>
         <source>Current position</source>
         <translation>Текущее местоположение</translation>
     </message>
