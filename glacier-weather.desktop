@@ -5,3 +5,6 @@ Exec=/usr/bin/glacier-weather
 Name=Weather
 Name[cs]=Počasí
 Name[ru]=Погода
+Name[es]=Clima
+Name[sk_SK]=Počasie
+Name[uk]=Погода
