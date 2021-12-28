@@ -64,47 +64,47 @@ Item {
         source: {
                 switch (weatherIcon) {
                 case "01d":
-                    "../../icons/wi-day-sunny.png"
+                    "file:///usr/share/glacier-weather/icons/wi-day-sunny.png"
                     break;
                 case "01n":
-                    "../../icons/wi-night-clear.png"
+                    "file:///usr/share/glacier-weather/icons/wi-night-clear.png"
                     break;
                 case "02d":
-                    "../../icons/wi-day-cloudy.png"
+                    "file:///usr/share/glacier-weather/icons/wi-day-cloudy.png"
                     break;
                 case "02n":
-                    "../../icons/wi-night-cloudy.png"
+                    "file:///usr/share/glacier-weather/icons/wi-night-cloudy.png"
                     break;
                 case "03d":
                 case "03n":
-                    "../../icons/wi-cloud.png"
+                    "file:///usr/share/glacier-weather/icons/wi-cloud.png"
                     break;
                 case "04d":
                 case "04n":
-                    "../../icons/wi-cloudy.png"
+                    "file:///usr/share/glacier-weather/icons/wi-cloudy.png"
                     break;
                 case "09d":
                 case "09n":
-                    "../../icons/wi-showers.png"
+                    "file:///usr/share/glacier-weather/icons/wi-showers.png"
                     break;
                 case "10d":
                 case "10n":
-                    "../../icons/wi-rain.png"
+                    "file:///usr/share/glacier-weather/icons/wi-rain.png"
                     break;
                 case "11d":
                 case "11n":
-                    "../../icons/wi-thunderstorm.png"
+                    "file:///usr/share/glacier-weather/icons/wi-thunderstorm.png"
                     break;
                 case "13d":
                 case "13n":
-                    "../../icons/wi-snow.png"
+                    "file:///usr/share/glacier-weather/icons/wi-snow.png"
                     break;
                 case "50d":
                 case "50n":
-                    "../../icons/wi-fog.png"
+                    "file:///usr/share/glacier-weather/icons/wi-fog.png"
                     break;
                 default:
-                    "../../icons/wi-cloud-refresh.png"
+                    "file:///usr/share/glacier-weather/icons/wi-cloud-refresh.png"
                 }
 
         }

@@ -6,7 +6,9 @@ set(SRC
     weatherdata.cpp
 )
 
-add_executable(glacier-weather ${SRC})
+qtquick_compiler_add_resources(RESOURCES qml/glacier-weather.qrc)
+
+add_executable(glacier-weather ${SRC} ${RESOURCES})
 
 target_link_libraries(glacier-weather
 	Qt5::Gui
@@ -17,5 +19,3 @@ target_link_libraries(glacier-weather
 
 install(TARGETS glacier-weather RUNTIME
 	DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(DIRECTORY qml
-	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/glacier-weather)
