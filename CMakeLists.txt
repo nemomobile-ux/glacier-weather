@@ -15,6 +15,7 @@ include(GNUInstallDirs)
 set(QT_MIN_VERSION "5.6.0")
 find_package(Qt5 COMPONENTS Gui Qml Quick Positioning LinguistTools REQUIRED)
 find_package(Glacier COMPONENTS App REQUIRED)
+find_package(Qt5QuickCompiler)
 
 add_subdirectory(src)
 
