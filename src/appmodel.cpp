@@ -53,14 +53,14 @@
 
 #include <qnetworkconfigmanager.h>
 
+#include <QElapsedTimer>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QLoggingCategory>
 #include <QStringList>
 #include <QTimer>
 #include <QUrlQuery>
-#include <QElapsedTimer>
-#include <QLoggingCategory>
 
 /*
  *This application uses http://openweathermap.org/api
@@ -91,12 +91,14 @@ static QString niceTemperatureString(int temperatureUnits, double t)
  * @return converted value
  */
 
-static double speedConvert(int units, double s) {
+static double speedConvert(int units, double s)
+{
     switch (units) {
     case 0: // Mph
         return s * 2.23693629;
     case 2: // km/h
-        return s * 3.6;;
+        return s * 3.6;
+        ;
     case 3: // kt
         return s * 1.94384449;
     default:
@@ -105,16 +107,14 @@ static double speedConvert(int units, double s) {
     }
 }
 
-
-class AppModelPrivate
-{
+class AppModelPrivate {
 public:
     static const int baseMsBeforeNewRequest = 5 * 1000; // 5 s, increased after each missing answer up to 10x
-    QNetworkAccessManager *nam;
+    QNetworkAccessManager* nam;
 
     WeatherData now;
     QList<WeatherData*> forecast;
-    QQmlListProperty<WeatherData> *fcProp;
+    QQmlListProperty<WeatherData>* fcProp;
     bool ready;
     int nErrors;
     int minMsBeforeNewRequest;
@@ -126,55 +126,53 @@ public:
     QString app_ident;
     QString city;
 
-    AppModelPrivate() :
-        nam(NULL),
-        fcProp(NULL),
-        ready(false),
-        nErrors(0),
-        minMsBeforeNewRequest(baseMsBeforeNewRequest),
-        temperatureUnits(0),
-        windUnits(0)
+    AppModelPrivate()
+        : nam(NULL)
+        , fcProp(NULL)
+        , ready(false)
+        , nErrors(0)
+        , minMsBeforeNewRequest(baseMsBeforeNewRequest)
+        , temperatureUnits(0)
+        , windUnits(0)
     {
         requestNewWeatherTimer.setSingleShot(false);
-        requestNewWeatherTimer.setInterval(20*60*1000); // 20 min
+        requestNewWeatherTimer.setInterval(20 * 60 * 1000); // 20 min
         app_ident = QStringLiteral("36496bad1955bf3365448965a42b9eac");
     }
 };
 
-static void forecastAppend(QQmlListProperty<WeatherData> *prop, WeatherData *val)
+static void forecastAppend(QQmlListProperty<WeatherData>* prop, WeatherData* val)
 {
     Q_UNUSED(val);
     Q_UNUSED(prop);
 }
 
-static WeatherData *forecastAt(QQmlListProperty<WeatherData> *prop, int index)
+static WeatherData* forecastAt(QQmlListProperty<WeatherData>* prop, int index)
 {
-    AppModelPrivate *d = static_cast<AppModelPrivate*>(prop->data);
+    AppModelPrivate* d = static_cast<AppModelPrivate*>(prop->data);
     return d->forecast.at(index);
 }
 
-static int forecastCount(QQmlListProperty<WeatherData> *prop)
+static int forecastCount(QQmlListProperty<WeatherData>* prop)
 {
-    AppModelPrivate *d = static_cast<AppModelPrivate*>(prop->data);
+    AppModelPrivate* d = static_cast<AppModelPrivate*>(prop->data);
     return d->forecast.size();
 }
 
-static void forecastClear(QQmlListProperty<WeatherData> *prop)
+static void forecastClear(QQmlListProperty<WeatherData>* prop)
 {
     static_cast<AppModelPrivate*>(prop->data)->forecast.clear();
 }
 
-
-
-AppModel::AppModel(QObject *parent) :
-        QObject(parent),
-        d(new AppModelPrivate)
+AppModel::AppModel(QObject* parent)
+    : QObject(parent)
+    , d(new AppModelPrivate)
 {
     d->fcProp = new QQmlListProperty<WeatherData>(this, d,
-                                                          forecastAppend,
-                                                          forecastCount,
-                                                          forecastAt,
-                                                          forecastClear);
+        forecastAppend,
+        forecastCount,
+        forecastAt,
+        forecastClear);
 
     connect(&d->requestNewWeatherTimer, SIGNAL(timeout()), this, SLOT(refreshWeather()));
     d->requestNewWeatherTimer.start();
@@ -189,8 +187,6 @@ AppModel::~AppModel()
     delete d;
 }
 
-
-
 void AppModel::refreshWeather()
 {
     if (d->city.isEmpty()) {
@@ -204,18 +200,17 @@ void AppModel::refreshWeather()
     query.addQueryItem("q", d->city);
     query.addQueryItem("mode", "json");
     query.addQueryItem("APPID", d->app_ident);
-//    query.addQueryItem("lang", "cs");
+    //    query.addQueryItem("lang", "cs");
     query.addQueryItem("units", "standard"); // kelvin
     url.setQuery(query);
 
-    QNetworkReply *rep = d->nam->get(QNetworkRequest(url));
+    QNetworkReply* rep = d->nam->get(QNetworkRequest(url));
     // connect up the signal right away
     connect(rep, &QNetworkReply::finished,
-            this, [this, rep]() { handleWeatherNetworkData(rep); });
+        this, [this, rep]() { handleWeatherNetworkData(rep); });
 }
 
-
-void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
+void AppModel::handleWeatherNetworkData(QNetworkReply* networkReply)
 {
     qDebug() << "got weather network data";
     if (!networkReply) {
@@ -223,7 +218,7 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
     }
 
     if (!networkReply->error()) {
-        foreach (WeatherData *inf, d->forecast)
+        foreach (WeatherData* inf, d->forecast)
             delete inf;
         d->forecast.clear();
 
@@ -241,15 +236,14 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
                 tempObject = val.toObject();
                 d->now.setWeatherDescription(tempObject.value(QStringLiteral("description")).toString());
                 d->now.setWeatherIcon(tempObject.value("icon").toString());
-
             }
             if (obj.contains(QStringLiteral("wind"))) {
                 val = obj.value(QStringLiteral("wind"));
                 tempObject = val.toObject();
                 val = tempObject.value(QStringLiteral("speed"));
-                d->now.setWindSpeed(QString::number(qRound( speedConvert(d->windUnits, val.toDouble()) )));
+                d->now.setWindSpeed(QString::number(qRound(speedConvert(d->windUnits, val.toDouble()))));
                 val = tempObject.value(QStringLiteral("gust"));
-                d->now.setWindGusts(QString::number(qRound( speedConvert(d->windUnits, val.toDouble()) )));
+                d->now.setWindGusts(QString::number(qRound(speedConvert(d->windUnits, val.toDouble()))));
                 val = tempObject.value(QStringLiteral("deg"));
                 d->now.setWindDirection(QString::number(qRound(val.toDouble())));
             }
@@ -263,24 +257,24 @@ void AppModel::handleWeatherNetworkData(QNetworkReply *networkReply)
     }
     networkReply->deleteLater();
 
-    //retrieve the forecast
+    // retrieve the forecast
     QUrl url("http://api.openweathermap.org/data/2.5/forecast/daily");
     QUrlQuery query;
 
     query.addQueryItem("q", d->city);
     query.addQueryItem("mode", "json");
     query.addQueryItem("cnt", "5");
-//    query.addQueryItem("lang", "cs");
+    //    query.addQueryItem("lang", "cs");
     query.addQueryItem("APPID", d->app_ident);
     url.setQuery(query);
 
-    QNetworkReply *rep = d->nam->get(QNetworkRequest(url));
+    QNetworkReply* rep = d->nam->get(QNetworkRequest(url));
     // connect up the signal right away
     connect(rep, &QNetworkReply::finished,
-            this, [this, rep]() { handleForecastNetworkData(rep); });
+        this, [this, rep]() { handleForecastNetworkData(rep); });
 }
 
-void AppModel::handleForecastNetworkData(QNetworkReply *networkReply)
+void AppModel::handleForecastNetworkData(QNetworkReply* networkReply)
 {
     qDebug() << "got forecast";
     if (!networkReply) {
@@ -297,15 +291,15 @@ void AppModel::handleForecastNetworkData(QNetworkReply *networkReply)
         if (!jv.isArray())
             qWarning() << "Invalid forecast object";
         QJsonArray ja = jv.toArray();
-        //we need 4 days of forecast -> first entry is today
+        // we need 4 days of forecast -> first entry is today
         if (ja.count() != 5)
             qWarning() << "Invalid forecast object";
 
         QString data;
-        for (int i = 1; i<ja.count(); i++) {
-            WeatherData *forecastEntry = new WeatherData();
+        for (int i = 1; i < ja.count(); i++) {
+            WeatherData* forecastEntry = new WeatherData();
 
-            //min/max temperature
+            // min/max temperature
             QJsonObject subtree = ja.at(i).toObject();
 
             jo = subtree.value(QStringLiteral("temp")).toObject();
@@ -318,25 +312,25 @@ void AppModel::handleForecastNetworkData(QNetworkReply *networkReply)
             forecastEntry->setTemperature(data);
 
             jv = subtree.value(QStringLiteral("speed"));
-            forecastEntry->setWindSpeed(QString::number( speedConvert(d->windUnits, jv.toDouble()) ));
+            forecastEntry->setWindSpeed(QString::number(speedConvert(d->windUnits, jv.toDouble())));
 
             jv = subtree.value(QStringLiteral("gust"));
-            forecastEntry->setWindGusts(QString::number( speedConvert(d->windUnits, jv.toDouble()) ));
+            forecastEntry->setWindGusts(QString::number(speedConvert(d->windUnits, jv.toDouble())));
 
             jv = subtree.value(QStringLiteral("deg"));
             forecastEntry->setWindDirection(QString::number(jv.toDouble()));
 
-            //get date
+            // get date
             jv = subtree.value(QStringLiteral("dt"));
-            QDateTime dt = QDateTime::fromMSecsSinceEpoch((qint64)jv.toDouble()*1000);
+            QDateTime dt = QDateTime::fromMSecsSinceEpoch((qint64)jv.toDouble() * 1000);
             forecastEntry->setDayOfWeek(dt.date().toString(QStringLiteral("ddd")));
 
-            //get icon
+            // get icon
             QJsonArray weatherArray = subtree.value(QStringLiteral("weather")).toArray();
             jo = weatherArray.at(0).toObject();
             forecastEntry->setWeatherIcon(jo.value(QStringLiteral("icon")).toString());
 
-            //get description
+            // get description
             forecastEntry->setWeatherDescription(jo.value(QStringLiteral("description")).toString());
 
             d->forecast.append(forecastEntry);
@@ -354,12 +348,10 @@ bool AppModel::hasValidCity() const
 
 bool AppModel::hasValidWeather() const
 {
-    return hasValidCity() && (!(d->now.weatherIcon().isEmpty()) &&
-                              (d->now.weatherIcon().size() > 1) &&
-                              d->now.weatherIcon() != "");
+    return hasValidCity() && (!(d->now.weatherIcon().isEmpty()) && (d->now.weatherIcon().size() > 1) && d->now.weatherIcon() != "");
 }
 
-WeatherData *AppModel::weather() const
+WeatherData* AppModel::weather() const
 {
     return &(d->now);
 }
@@ -369,34 +361,37 @@ QQmlListProperty<WeatherData> AppModel::forecast() const
     return *(d->fcProp);
 }
 
-
 QString AppModel::city() const
 {
     return d->city;
 }
 
-void AppModel::setCity(const QString &value)
+void AppModel::setCity(const QString& value)
 {
     d->city = value;
     emit cityChanged();
     refreshWeather();
 }
 
-int AppModel::temperatureUnits() {
+int AppModel::temperatureUnits()
+{
     return d->temperatureUnits;
 }
 
-void AppModel::setTemperatureUnits(int &value) {
+void AppModel::setTemperatureUnits(int& value)
+{
     d->temperatureUnits = value;
     refreshWeather();
     emit temperatureUnitsChanged();
 }
 
-int AppModel::windUnits() {
+int AppModel::windUnits()
+{
     return d->windUnits;
 }
 
-void AppModel::setWindUnits(int &value) {
+void AppModel::setWindUnits(int& value)
+{
     d->windUnits = value;
     refreshWeather();
     emit windUnitsChanged();

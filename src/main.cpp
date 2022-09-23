@@ -50,34 +50,34 @@
 
 #include <QtGui/QGuiApplication>
 
-#include <QtQml>
-#include <QtQml/QQmlEngine>
-#include <QtQml/QQmlContext>
-#include <QtQuick/QQuickView>
-#include <QtQuick/QQuickItem>
 #include <QScreen>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlEngine>
+#include <QtQml>
+#include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickView>
 
 #include <glacierapp.h>
 
-#include <QtGui/QGuiApplication>
 #include <QLoggingCategory>
+#include <QtGui/QGuiApplication>
 
 #include "appmodel.h"
-#include "weatherdata.h"
 #include "placesmodel.h"
 #include "settings.h"
+#include "weatherdata.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    QGuiApplication *app = GlacierApp::app(argc, argv);
+    QGuiApplication* app = GlacierApp::app(argc, argv);
     app->setOrganizationName("NemoMobile");
 
     QScreen* sc = app->primaryScreen();
-    if(sc){
+    if (sc) {
         sc->setOrientationUpdateMask(Qt::LandscapeOrientation
-                             | Qt::PortraitOrientation
-                             | Qt::InvertedLandscapeOrientation
-                             | Qt::InvertedPortraitOrientation);
+            | Qt::PortraitOrientation
+            | Qt::InvertedLandscapeOrientation
+            | Qt::InvertedPortraitOrientation);
     }
 
     qmlRegisterType<WeatherData>("WeatherInfo", 1, 0, "WeatherData");
@@ -85,12 +85,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<PlacesModel>("WeatherInfo", 1, 0, "PlacesModel");
     qmlRegisterType<Settings>("WeatherInfo", 1, 0, "Settings");
 
-
-    QQuickWindow *window = GlacierApp::showWindow();
+    QQuickWindow* window = GlacierApp::showWindow();
     window->setTitle(QObject::tr("Weather"));
     window->setIcon(QIcon("/usr/share/glacier-weather/images/glacier-weather.png"));
 
     return app->exec();
-
-
 }
