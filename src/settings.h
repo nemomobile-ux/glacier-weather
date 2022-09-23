@@ -5,29 +5,28 @@
 #include <QSettings>
 
 class Settings : public QSettings {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Settings(QObject *parent = 0);
-  virtual ~Settings();
+    Settings(QObject* parent = 0);
+    virtual ~Settings();
 
-  Q_INVOKABLE
-  void setValue(const QString &key, const QVariant &value);
+    Q_INVOKABLE
+    void setValue(const QString& key, const QVariant& value);
 
-  Q_INVOKABLE
-  void setValueIfNotSet(const QString &key, const QVariant &value);
+    Q_INVOKABLE
+    void setValueIfNotSet(const QString& key, const QVariant& value);
 
-  Q_INVOKABLE
-  QVariant value(const QString &key, const QVariant &defaultValue);
+    Q_INVOKABLE
+    QVariant value(const QString& key, const QVariant& defaultValue);
 
-  Q_INVOKABLE
-  bool boolValue(const QString &key, const bool defaultValue);
+    Q_INVOKABLE
+    bool boolValue(const QString& key, const bool defaultValue);
 
-  Q_INVOKABLE
-  void initToDefaults();
+    Q_INVOKABLE
+    void initToDefaults();
 
 signals:
-  void settingChanged(const QString& key);
+    void settingChanged(const QString& key);
 };
 
 #endif // SETTINGS_H
-

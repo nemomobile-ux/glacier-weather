@@ -51,40 +51,38 @@
 #ifndef APPMODEL_H
 #define APPMODEL_H
 
+#include "weatherdata.h"
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkReply>
 #include <QtQml/QQmlListProperty>
-#include "weatherdata.h"
 
 #include <QtPositioning/QGeoPositionInfoSource>
 
-
 class AppModelPrivate;
-class AppModel : public QObject
-{
+class AppModel : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool hasValidCity
-               READ hasValidCity
-               NOTIFY cityChanged)
+            READ hasValidCity
+                NOTIFY cityChanged)
     Q_PROPERTY(bool hasValidWeather
-               READ hasValidWeather
-               NOTIFY weatherChanged)
+            READ hasValidWeather
+                NOTIFY weatherChanged)
     Q_PROPERTY(QString city
-               READ city WRITE setCity
-               NOTIFY cityChanged)
-    Q_PROPERTY(WeatherData *weather
-               READ weather
-               NOTIFY weatherChanged)
+            READ city WRITE setCity
+                NOTIFY cityChanged)
+    Q_PROPERTY(WeatherData* weather
+            READ weather
+                NOTIFY weatherChanged)
     Q_PROPERTY(QQmlListProperty<WeatherData> forecast
-               READ forecast
-               NOTIFY weatherChanged)
+            READ forecast
+                NOTIFY weatherChanged)
 
     Q_PROPERTY(int temperatureUnits READ temperatureUnits WRITE setTemperatureUnits NOTIFY temperatureUnitsChanged)
     Q_PROPERTY(int windUnits READ windUnits WRITE setWindUnits NOTIFY windUnitsChanged)
 
 public:
-    explicit AppModel(QObject *parent = 0);
+    explicit AppModel(QObject* parent = 0);
     ~AppModel();
 
     bool hasValidWeather() const;
@@ -92,24 +90,23 @@ public:
     void hadError(bool tryAgain);
 
     QString city() const;
-    void setCity(const QString &value);
+    void setCity(const QString& value);
 
-    WeatherData *weather() const;
+    WeatherData* weather() const;
     QQmlListProperty<WeatherData> forecast() const;
 
     int temperatureUnits();
-    void setTemperatureUnits(int &value);
+    void setTemperatureUnits(int& value);
 
     int windUnits();
-    void setWindUnits(int &value);
-
+    void setWindUnits(int& value);
 
 public slots:
     Q_INVOKABLE void refreshWeather();
 
 private slots:
-    void handleWeatherNetworkData(QNetworkReply *networkReply);
-    void handleForecastNetworkData(QNetworkReply *networkReply);
+    void handleWeatherNetworkData(QNetworkReply* networkReply);
+    void handleForecastNetworkData(QNetworkReply* networkReply);
 
 signals:
     void weatherChanged();
@@ -117,10 +114,8 @@ signals:
     void temperatureUnitsChanged();
     void windUnitsChanged();
 
-
 private:
-    AppModelPrivate *d;
-
+    AppModelPrivate* d;
 };
 
 #endif // APPMODEL_H
