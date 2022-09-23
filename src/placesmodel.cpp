@@ -1,32 +1,32 @@
+#include <QtNetwork/QNetworkReply>
+#include <qgeopositioninfo.h>
 #include <qgeopositioninfosource.h>
 #include <qgeosatelliteinfosource.h>
-#include <qnmeapositioninfosource.h>
-#include <qgeopositioninfo.h>
 #include <qnetworkconfigmanager.h>
-#include <QtNetwork/QNetworkReply>
+#include <qnmeapositioninfosource.h>
 
-
+#include <QElapsedTimer>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QLoggingCategory>
 #include <QStringList>
 #include <QTimer>
 #include <QUrlQuery>
-#include <QElapsedTimer>
-#include <QLoggingCategory>
 
 #include <QDebug>
 
 #include "placesmodel.h"
 
-PlacesModel::PlacesModel(QObject *parent) : QObject(parent)
+PlacesModel::PlacesModel(QObject* parent)
+    : QObject(parent)
 {
     src = QGeoPositionInfoSource::createDefaultSource(this);
     bool useGps = true;
     connect(src, SIGNAL(positionUpdated(QGeoPositionInfo)),
-            this, SLOT(positionUpdated(QGeoPositionInfo)));
+        this, SLOT(positionUpdated(QGeoPositionInfo)));
     connect(src, SIGNAL(error(QGeoPositionInfoSource::Error)),
-            this, SLOT(positionError(QGeoPositionInfoSource::Error)));
+        this, SLOT(positionError(QGeoPositionInfoSource::Error)));
 
     delayedCityRequestTimer.setSingleShot(true);
     delayedCityRequestTimer.setInterval(1000); // 1 s
@@ -38,32 +38,31 @@ PlacesModel::PlacesModel(QObject *parent) : QObject(parent)
 
     QObject::connect(&delayedCityRequestTimer, SIGNAL(timeout()), this, SLOT(queryCity()));
 
-
     // do not use gps if not needed
     //    src->startUpdates();
     m_city = "";
 }
 
-PlacesModel::~PlacesModel() {
+PlacesModel::~PlacesModel()
+{
     if (src) {
         src->stopUpdates();
     }
-
 }
 
-void PlacesModel::update() {
+void PlacesModel::update()
+{
     src->startUpdates();
 
-        m_city = "";
-        throttle.invalidate();
-        emit cityChanged();
-
+    m_city = "";
+    throttle.invalidate();
+    emit cityChanged();
 }
 
-QString PlacesModel::city() {
+QString PlacesModel::city()
+{
     return m_city;
 }
-
 
 void PlacesModel::positionUpdated(QGeoPositionInfo gpsPos)
 {
@@ -74,9 +73,9 @@ void PlacesModel::positionUpdated(QGeoPositionInfo gpsPos)
 
 void PlacesModel::queryCity()
 {
-    //don't update more often then once a minute
-    //to keep load on server low
-    if (throttle.isValid() && throttle.elapsed() < minMsBeforeNewRequest ) {
+    // don't update more often then once a minute
+    // to keep load on server low
+    if (throttle.isValid() && throttle.elapsed() < minMsBeforeNewRequest) {
         qDebug() << "delaying query of city";
         if (!delayedCityRequestTimer.isActive())
             delayedCityRequestTimer.start();
@@ -99,10 +98,10 @@ void PlacesModel::queryCity()
     url.setQuery(query);
     qDebug() << "submitting request";
 
-    QNetworkReply *rep = nam->get(QNetworkRequest(url));
+    QNetworkReply* rep = nam->get(QNetworkRequest(url));
     // connect up the signal right away
     connect(rep, &QNetworkReply::finished,
-            this, [this, rep]() { handleGeoNetworkData(rep); });
+        this, [this, rep]() { handleGeoNetworkData(rep); });
 }
 
 void PlacesModel::positionError(QGeoPositionInfoSource::Error e)
@@ -130,7 +129,7 @@ void PlacesModel::hadError(bool tryAgain)
         delayedCityRequestTimer.start();
 }
 
-void PlacesModel::handleGeoNetworkData(QNetworkReply *networkReply)
+void PlacesModel::handleGeoNetworkData(QNetworkReply* networkReply)
 {
     if (!networkReply) {
         hadError(false); // should retry?
@@ -142,7 +141,7 @@ void PlacesModel::handleGeoNetworkData(QNetworkReply *networkReply)
         if (!throttle.isValid())
             throttle.start();
         minMsBeforeNewRequest = baseMsBeforeNewRequest;
-        //convert coordinates to city name
+        // convert coordinates to city name
         QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
 
         QJsonObject jo = document.object();

@@ -1,16 +1,16 @@
 #include "weatherdata.h"
 
-WeatherData::WeatherData(QObject *parent) :
-        QObject(parent)
+WeatherData::WeatherData(QObject* parent)
+    : QObject(parent)
 {
 }
 
-WeatherData::WeatherData(const WeatherData &other) :
-        QObject(0),
-        m_dayOfWeek(other.m_dayOfWeek),
-        m_weather(other.m_weather),
-        m_weatherDescription(other.m_weatherDescription),
-        m_temperature(other.m_temperature)
+WeatherData::WeatherData(const WeatherData& other)
+    : QObject(0)
+    , m_dayOfWeek(other.m_dayOfWeek)
+    , m_weather(other.m_weather)
+    , m_weatherDescription(other.m_weatherDescription)
+    , m_temperature(other.m_temperature)
 {
 }
 
@@ -58,45 +58,43 @@ QString WeatherData::windDirection() const
     return m_wind_direction;
 }
 
-void WeatherData::setDayOfWeek(const QString &value)
+void WeatherData::setDayOfWeek(const QString& value)
 {
     m_dayOfWeek = value;
     emit dataChanged();
 }
 
-void WeatherData::setWeatherIcon(const QString &value)
+void WeatherData::setWeatherIcon(const QString& value)
 {
     m_weather = value;
     emit dataChanged();
 }
 
-void WeatherData::setWeatherDescription(const QString &value)
+void WeatherData::setWeatherDescription(const QString& value)
 {
     m_weatherDescription = value;
     emit dataChanged();
 }
 
-void WeatherData::setTemperature(const QString &value)
+void WeatherData::setTemperature(const QString& value)
 {
     m_temperature = value;
     emit dataChanged();
 }
 
-void WeatherData::setWindSpeed(const QString &value)
+void WeatherData::setWindSpeed(const QString& value)
 {
     m_wind_speed = value;
     emit dataChanged();
 }
 
-void WeatherData::setWindGusts(const QString &value)
+void WeatherData::setWindGusts(const QString& value)
 {
     m_wind_gusts = value;
     emit dataChanged();
 }
 
-void WeatherData::setWindDirection(const QString &value)
+void WeatherData::setWindDirection(const QString& value)
 {
     m_wind_direction = value;
 }
-
-
