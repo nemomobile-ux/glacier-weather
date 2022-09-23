@@ -6,34 +6,33 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtQml/QQmlListProperty>
 
-
 class WeatherData : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString dayOfWeek
-               READ dayOfWeek WRITE setDayOfWeek
-               NOTIFY dataChanged)
+            READ dayOfWeek WRITE setDayOfWeek
+                NOTIFY dataChanged)
     Q_PROPERTY(QString weatherIcon
-               READ weatherIcon WRITE setWeatherIcon
-               NOTIFY dataChanged)
+            READ weatherIcon WRITE setWeatherIcon
+                NOTIFY dataChanged)
     Q_PROPERTY(QString weatherDescription
-               READ weatherDescription WRITE setWeatherDescription
-               NOTIFY dataChanged)
+            READ weatherDescription WRITE setWeatherDescription
+                NOTIFY dataChanged)
     Q_PROPERTY(QString temperature
-               READ temperature WRITE setTemperature
-               NOTIFY dataChanged)
+            READ temperature WRITE setTemperature
+                NOTIFY dataChanged)
     Q_PROPERTY(QString windSpeed
-               READ windSpeed WRITE setWindSpeed
-               NOTIFY dataChanged)
+            READ windSpeed WRITE setWindSpeed
+                NOTIFY dataChanged)
     Q_PROPERTY(QString windGusts
-               READ windGusts WRITE setWindGusts
-               NOTIFY dataChanged)
+            READ windGusts WRITE setWindGusts
+                NOTIFY dataChanged)
     Q_PROPERTY(QString windDirection
-               READ windDirection WRITE setWindDirection
-               NOTIFY dataChanged)
+            READ windDirection WRITE setWindDirection
+                NOTIFY dataChanged)
 
 public:
-    explicit WeatherData(QObject *parent = 0);
-    WeatherData(const WeatherData &other);
+    explicit WeatherData(QObject* parent = 0);
+    WeatherData(const WeatherData& other);
 
     QString dayOfWeek() const;
     QString weatherIcon() const;
@@ -43,17 +42,17 @@ public:
     QString windGusts() const;
     QString windDirection() const;
 
-    void setDayOfWeek(const QString &value);
-    void setWeatherIcon(const QString &value);
-    void setWeatherDescription(const QString &value);
-    void setTemperature(const QString &value);
-    void setWindSpeed(const QString &value);
-    void setWindGusts(const QString &value);
-    void setWindDirection(const QString &value);
-
+    void setDayOfWeek(const QString& value);
+    void setWeatherIcon(const QString& value);
+    void setWeatherDescription(const QString& value);
+    void setTemperature(const QString& value);
+    void setWindSpeed(const QString& value);
+    void setWindGusts(const QString& value);
+    void setWindDirection(const QString& value);
 
 signals:
     void dataChanged();
+
 private:
     QString m_dayOfWeek;
     QString m_weather;
@@ -65,6 +64,5 @@ private:
 };
 
 Q_DECLARE_METATYPE(WeatherData)
-
 
 #endif // WEATHERDATA_H
