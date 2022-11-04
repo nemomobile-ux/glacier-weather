@@ -52,7 +52,9 @@ PlacesModel::~PlacesModel()
 
 void PlacesModel::update()
 {
-    src->startUpdates();
+    if (src) {
+        src->startUpdates();
+    }
 
     m_city = "";
     throttle.invalidate();
