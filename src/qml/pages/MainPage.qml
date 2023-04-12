@@ -18,14 +18,26 @@ Page {
                 onClicked: {
                     mainPage.Stack.view.push(Qt.resolvedUrl("PlacesPage.qml"), {settingsObject: settings})
                 }
+            }
+        ]
+
+        drawerLevels: [
+            ButtonRow {
+                anchors.margins: Theme.itemSpacingMedium
+                currentIndex: settings.windUnits
+                model: settings.speedUnitsOptions
+                onCurrentIndexChanged: {
+                    settings.windUnits = currentIndex;
+                }
             },
-            ToolButton {
-                iconSource: "image://theme/cog"
-                onClicked: {
-                    mainPage.Stack.view.push(Qt.resolvedUrl("SettingsPage.qml"), {settingsObject: settings})
+            ButtonRow {
+                anchors.margins: Theme.itemSpacingMedium
+                currentIndex: settings.temperatureUnits
+                model: settings.temperatureUnitsOptions
+                onCurrentIndexChanged: {
+                    settings.temperatureUnits = currentIndex
                 }
             }
-
         ]
     }
 

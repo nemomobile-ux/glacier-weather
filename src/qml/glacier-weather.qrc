@@ -6,7 +6,6 @@
         <file>components/BigForecastIcon.qml</file>
         <file>components/WeatherSettings.qml</file>
         <file>pages/MainPage.qml</file>
-        <file>pages/SettingsPage.qml</file>
         <file>pages/PlacesPage.qml</file>
     </qresource>
 </RCC>
