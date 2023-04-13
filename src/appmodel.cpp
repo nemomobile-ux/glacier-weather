@@ -254,7 +254,10 @@ void AppModel::handleWeatherNetworkData(QNetworkReply* networkReply)
                 d->now.setTemperature(niceTemperatureString(d->temperatureUnits, val.toDouble()));
             }
         }
+    } else {
+        emit networkDataError(city(), networkReply->errorString());
     }
+
     networkReply->deleteLater();
 
     // retrieve the forecast
@@ -337,6 +340,8 @@ void AppModel::handleForecastNetworkData(QNetworkReply* networkReply)
         }
 
         emit weatherChanged();
+    } else {
+        emit networkDataError(city(), networkReply->errorString());
     }
     networkReply->deleteLater();
 }

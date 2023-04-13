@@ -134,6 +134,18 @@ Item {
         placesModel.append({city: qsTr("Current position"), useGps: true})
     }
 
+    function removeCity(city) {
+        var json = settingsStorage.value("cities", "[]");
+        var citiesArray = JSON.parse(json);
+        for (var i = 0; i < citiesArray.length; i++) {
+            if(citiesArray[i] != city) {
+                placesModel.append({city: citiesArray[i], useGps: false})
+            }
+        }
+        settingsSavePlacesModel()
+        settingsLoadPlacesModel();
+    }
+
     Component.onCompleted: {
         settingsLoadPlacesModel();
         windUnits     = settingsStorage.value("windUnits", 1)

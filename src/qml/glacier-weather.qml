@@ -76,6 +76,13 @@ ApplicationWindow{
         id: model
         temperatureUnits: settings.temperatureUnits
         windUnits: settings.windUnits
+
+        onNetworkDataError: {
+            if(errorString.indexOf("Not Found") != -1) {
+                console.log(city+" - NOT FOUND - DELETE!")
+                settings.removeCity(city)
+            }
+        }
     }
     
     WeatherSettings {

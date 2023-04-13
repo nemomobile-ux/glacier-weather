@@ -76,11 +76,9 @@ Page {
         ]
 
         onAccepted: {
-            // TODO validator
+            model.city = addTextField.text
             settingsObject.places.insert(0, {city: addTextField.text, useGps: false})
             addDialog.close()
-
-
         }
         onCanceled: {
             addDialog.close()
