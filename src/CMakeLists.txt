@@ -1,9 +1,11 @@
 set(SRC 
     main.cpp
-    appmodel.cpp
+    dbadapter.cpp
+    openweatherapi.cpp
     placesmodel.cpp
     settings.cpp
     weatherdata.cpp
+    weathermodel.cpp
 )
 
 qtquick_compiler_add_resources(RESOURCES qml/glacier-weather.qrc)
@@ -15,6 +17,7 @@ target_link_libraries(glacier-weather
 	Qt5::Qml
 	Qt5::Quick
 	Qt5::Positioning
+        Qt5::Sql
 	Glacier::App)
 
 install(TARGETS glacier-weather RUNTIME

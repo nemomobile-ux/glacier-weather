@@ -11,42 +11,68 @@
 #include <QObject>
 #include <QTimer>
 
-class PlacesModel : public QObject {
+#include "openweatherapi.h"
+
+class PlacesModel : public QAbstractListModel {
     Q_OBJECT
+    Q_PROPERTY(QString searchString READ searchString WRITE setSearchString NOTIFY searchStringChanged)
+    Q_PROPERTY(bool useLocation READ useLocation NOTIFY useLocationChanged)
+
+    struct Place {
+        int dbID;
+        int cityId;
+        QString cityName;
+        double lat;
+        double lon;
+    };
 
 public:
     explicit PlacesModel(QObject* parent = nullptr);
     ~PlacesModel();
 
-    Q_INVOKABLE void update();
-    Q_PROPERTY(QString city READ city NOTIFY cityChanged)
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role) const;
+    QHash<int, QByteArray> roleNames() const { return m_hash; }
+
+    Q_INVOKABLE void searchByLocation();
+    Q_INVOKABLE void addToFavorites(int cityID, QString cityName);
+    Q_INVOKABLE void removeFromFavorites(int cityID);
+
+    QString searchString() { return m_searchSctring; }
+    void setSearchString(QString searchString);
+
+    Q_INVOKABLE void getCityData(int index);
+    Q_INVOKABLE bool isFavorite(QString cityID);
+
+    Q_INVOKABLE QVariantMap get(int row) const;
+
+    bool useLocation() { return m_useLocation; }
 
 signals:
-    void cityChanged();
+    void searchStringChanged(QString string);
+    void geoCityReady(QString city);
+    void useLocationChanged();
 
 public slots:
-    QString city();
-    void queryCity();
     void positionUpdated(QGeoPositionInfo gpsPos);
     void positionError(QGeoPositionInfoSource::Error e);
-    void handleGeoNetworkData(QNetworkReply* networkReply);
-    void hadError(bool tryAgain);
+
+private slots:
+    void formatListFromNameSearch(QByteArray json);
+    void formatListFromDB();
 
 private:
+    void loadPlaces(QString string);
+
+    QSqlDatabase m_db;
+    OpenWeatherAPI* m_api;
     QGeoPositionInfoSource* src;
-    QGeoCoordinate coord;
-    QString longitude, latitude;
-    QString m_city;
 
-    QNetworkAccessManager* nam;
-    QElapsedTimer throttle;
-    QTimer delayedCityRequestTimer;
-    int minMsBeforeNewRequest;
-    QString app_ident;
-    int nErrors;
-    static const int baseMsBeforeNewRequest = 5 * 1000; // 5 s, increased after each missing answer up to 10x
+    QHash<int, QByteArray> m_hash;
+    QList<Place> m_placesList;
 
-signals:
+    QString m_searchSctring;
+    bool m_useLocation;
 };
 
 #endif // PLACESMODEL_H

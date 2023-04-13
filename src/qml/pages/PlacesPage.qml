@@ -76,7 +76,7 @@ Page {
         ]
 
         onAccepted: {
-            model.city = addTextField.text
+            weatherModel.city = addTextField.text
             settingsObject.places.insert(0, {city: addTextField.text, useGps: false})
             addDialog.close()
         }
@@ -109,14 +109,11 @@ Page {
                 }
             ]
             onClicked: {
-                console.log("selected city " + city)
-                settingsObject.selectedCity = index;
+                settingsObject.selectedCity = city;
                 mainPage.pageStack.pop();
             }
 
         }
 
     }
-
-
 }

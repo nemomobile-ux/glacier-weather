@@ -66,7 +66,7 @@ Item {
     property alias places: placesModel
     property alias speedUnitsOptions: speedUnitModel
     property alias temperatureUnitsOptions: temperatureUnitModel
-    property int selectedCity: 0
+    property var selectedCity
     property bool settingsReady: false
 
     signal placesModelChanged()
@@ -106,6 +106,12 @@ Item {
     onTemperatureUnitsChanged: {
         if (settingsReady) {
             settingsStorage.setValue("temperatureUnits", temperatureUnits)
+        }
+    }
+
+    onSelectedCityChanged: {
+        if (settingsReady) {
+            settingsStorage.setValue("selectedCity", selectedCity)
         }
     }
 
@@ -150,6 +156,7 @@ Item {
         settingsLoadPlacesModel();
         windUnits     = settingsStorage.value("windUnits", 1)
         temperatureUnits =  parseInt(settingsStorage.value("temperatureUnits", 1))
+        selectedCity = settingsStorage.value("selectedCity", "");
         settingsReady = true;
     }
 

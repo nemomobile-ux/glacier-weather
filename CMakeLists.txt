@@ -13,7 +13,7 @@ include(FeatureSummary)
 include(GNUInstallDirs)
 
 set(QT_MIN_VERSION "5.11.0")
-find_package(Qt5 COMPONENTS Gui Qml Quick Positioning LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Gui Qml Quick Sql Positioning LinguistTools REQUIRED)
 find_package(Glacier 0.8.0 COMPONENTS App REQUIRED)
 find_package(Qt5QuickCompiler)
 
