@@ -113,6 +113,7 @@ signals:
     void cityChanged();
     void temperatureUnitsChanged();
     void windUnitsChanged();
+    void networkDataError(QString city, QString errorString);
 
 private:
     AppModelPrivate* d;
