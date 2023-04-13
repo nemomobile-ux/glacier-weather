@@ -45,18 +45,24 @@ Page {
         id: main
         anchors.fill: parent
 
+        Spinner {
+            id: spinner
+            enabled: !model.hasValidCity
+            anchors.centerIn: parent
+        }
+
         Column {
             spacing: Theme.itemSpacingExtraSmall
+            visible: model.hasValidCity
 
             anchors {
                 fill: parent
                 margins: Theme.itemSpacingExtraSmall
             }
 
-            Rectangle {
+            Item {
                 width: parent.width
                 height: Theme.itemHeightHuge
-                color: "transparent"
 
                 Text {
                     text: (model.hasValidCity ? model.city : "Unknown location") + (settings.places.get(settings.selectedCity).useGps ? " (GPS)" : "")
@@ -114,7 +120,6 @@ Page {
                     }
                 }
             }
-
 
             Row {
                 id: iconRow
@@ -174,11 +179,7 @@ Page {
                     weatherIcon: (model.hasValidWeather ?
                               model.forecast[3].weatherIcon : "01d")
                 }
-
             }
         }
     }
-
-
-
 }
