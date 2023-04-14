@@ -65,54 +65,37 @@ ApplicationWindow{
     id: window
 
     initialPage: MainPage {
-
+        id: mainPage
     }
 
     PlacesModel {
         id: placesModel
-    }
+        onGeoCityReady: {
+            weatherModel.city = city
+        }
 
-    AppModel {
-        id: model
-        temperatureUnits: settings.temperatureUnits
-        windUnits: settings.windUnits
-
-        onNetworkDataError: {
-            if(errorString.indexOf("Not Found") != -1) {
-                console.log(city+" - NOT FOUND - DELETE!")
-                settings.removeCity(city)
+        Component.onCompleted: {
+            if(settings.selectedCity != "") {
+                weatherModel.city = settings.selectedCity
+            } else {
+                if(placesModel.rowCount() > 0) {
+                    weatherModel.city = placesModel.get(0).cityName
+                } else {
+                    placesModel.searchByLocation();
+                }
             }
         }
     }
     
+    WeatherModel{
+        id: weatherModel
+        onCityNotFound: settings.removeCity(city)
+    }
+
     WeatherSettings {
         id: settings;
-        onSelectedCityChanged: updateWeatherModel();
-        onPlacesModelChanged:  updateWeatherModel();
-
-        property string gpsCity: ""
-        onGpsCityChanged: {
-            model.city = gpsCity
+        onSelectedCityChanged: {
+            weatherModel.city = settings.selectedCity
         }
-
-        function updateWeatherModel() {
-            var item = settings.places.get(settings.selectedCity);
-            if (item.useGps) {
-                model.city = gpsCity
-                placesModel.update();
-            } else {
-                model.city = item.city;
-            }
-        }
-
-        Component.onCompleted: updateWeatherModel();
     }
-
-    Binding {
-        target: settings
-        property: "gpsCity"
-        value: placesModel.city
-    }
-
-    
 }

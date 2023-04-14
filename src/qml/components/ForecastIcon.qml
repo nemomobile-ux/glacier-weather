@@ -50,21 +50,31 @@
 
 import QtQuick 2.0
 
-//Item {
-Rectangle {
+Item {
     id: top
 
-    color: "transparent"
-
-    property string topText: "Mon"
+    property int timestamp
+    property var temperatureMin
+    property var temperatureMax
     property string weatherIcon: "01d"
-    property string bottomText: "22*/23*"
+
+    function getDay(timestamp) {
+        var days = [qsTr('Sun'),qsTr('Mon'),qsTr('Tue'),qsTr('Wed'),qsTr('Thu'),qsTr('Fri'),qsTr('Sat')];
+        return days[new Date(timestamp * 1000).getDay()];
+    }
+
+    function formatTemp() {
+        return weatherModel.niceTemperatureString(settings.temperatureUnits , temperatureMin)
+                + "/ "
+                + weatherModel.niceTemperatureString(settings.temperatureUnits, temperatureMax)
+                + settings.temperatureUnitsOptions.get(settings.temperatureUnits).shortname
+    }
 
     Text {
         id: dayText
         horizontalAlignment: Text.AlignHCenter
         width: top.width
-        text: top.topText
+        text: getDay(top.timestamp)
         color: Theme.textColor
         font.pixelSize: Theme.fontSizeMedium
 
@@ -96,7 +106,7 @@ Rectangle {
         id: tempText
         horizontalAlignment: Text.AlignHCenter
         width: top.width
-        text: top.bottomText
+        text: formatTemp()
         color: Theme.textColor
         font.pixelSize: Theme.fontSizeMedium
 

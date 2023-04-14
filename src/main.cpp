@@ -62,10 +62,9 @@
 #include <QLoggingCategory>
 #include <QtGui/QGuiApplication>
 
-#include "appmodel.h"
 #include "placesmodel.h"
 #include "settings.h"
-#include "weatherdata.h"
+#include "weathermodel.h"
 
 int main(int argc, char* argv[])
 {
@@ -80,8 +79,7 @@ int main(int argc, char* argv[])
             | Qt::InvertedPortraitOrientation);
     }
 
-    qmlRegisterType<WeatherData>("WeatherInfo", 1, 0, "WeatherData");
-    qmlRegisterType<AppModel>("WeatherInfo", 1, 0, "AppModel");
+    qmlRegisterType<WeatherModel>("WeatherInfo", 1, 0, "WeatherModel");
     qmlRegisterType<PlacesModel>("WeatherInfo", 1, 0, "PlacesModel");
     qmlRegisterType<Settings>("WeatherInfo", 1, 0, "Settings");
 

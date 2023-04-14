@@ -19,28 +19,27 @@
 #include "placesmodel.h"
 
 PlacesModel::PlacesModel(QObject* parent)
-    : QObject(parent)
+    : QAbstractListModel(parent)
+    , m_useLocation(false)
 {
+    m_hash.insert(Qt::UserRole, QByteArray("dbID"));
+    m_hash.insert(Qt::UserRole + 1, QByteArray("cityID"));
+    m_hash.insert(Qt::UserRole + 2, QByteArray("cityName"));
+    m_hash.insert(Qt::UserRole + 3, QByteArray("lat"));
+    m_hash.insert(Qt::UserRole + 4, QByteArray("lon"));
+
+    m_api = new OpenWeatherAPI();
+    m_db = dbAdapter::instance().getDatabase();
+
     src = QGeoPositionInfoSource::createDefaultSource(this);
-    bool useGps = true;
-    connect(src, SIGNAL(positionUpdated(QGeoPositionInfo)),
-        this, SLOT(positionUpdated(QGeoPositionInfo)));
-    connect(src, SIGNAL(error(QGeoPositionInfoSource::Error)),
-        this, SLOT(positionError(QGeoPositionInfoSource::Error)));
+    connect(src, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)));
+    connect(src, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SLOT(positionError(QGeoPositionInfoSource::Error)));
 
-    delayedCityRequestTimer.setSingleShot(true);
-    delayedCityRequestTimer.setInterval(1000); // 1 s
-    throttle.invalidate();
+    connect(this, &PlacesModel::searchStringChanged, this, &PlacesModel::loadPlaces);
+    connect(m_api, &OpenWeatherAPI::searchCityDataReady, this, &PlacesModel::formatListFromNameSearch);
+    connect(m_api, &OpenWeatherAPI::findCitybyGeo, this, &PlacesModel::geoCityReady);
 
-    app_ident = QStringLiteral("36496bad1955bf3365448965a42b9eac");
-
-    nam = new QNetworkAccessManager(this);
-
-    QObject::connect(&delayedCityRequestTimer, SIGNAL(timeout()), this, SLOT(queryCity()));
-
-    // do not use gps if not needed
-    //    src->startUpdates();
-    m_city = "";
+    formatListFromDB();
 }
 
 PlacesModel::~PlacesModel()
@@ -50,60 +49,141 @@ PlacesModel::~PlacesModel()
     }
 }
 
-void PlacesModel::update()
+int PlacesModel::rowCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent);
+    return m_placesList.count();
+}
+
+QVariant PlacesModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (index.row() >= m_placesList.size())
+        return QVariant();
+
+    Place item = m_placesList.at(index.row());
+    switch (role) {
+    case Qt::UserRole:
+        return item.dbID;
+    case Qt::UserRole + 1:
+        return item.cityId;
+    case Qt::UserRole + 2:
+        return item.cityName;
+    case Qt::UserRole + 3:
+        return item.lat;
+    case Qt::UserRole + 4:
+        return item.lon;
+    default:
+        return QVariant();
+    }
+}
+
+void PlacesModel::searchByLocation()
 {
     if (src) {
         src->startUpdates();
     }
-
-    m_city = "";
-    throttle.invalidate();
-    emit cityChanged();
 }
 
-QString PlacesModel::city()
+void PlacesModel::addToFavorites(int cityID, QString cityName)
 {
-    return m_city;
+    if (cityID == 0 || cityName.isEmpty()) {
+        return;
+    }
+
+    qDebug() << Q_FUNC_INFO << cityID << cityName;
+    QSqlQuery query(m_db);
+    query.prepare("INSERT INTO cityes (`cityID`, `cityName`) VALUES (:cityID, :cityName)");
+    query.bindValue(":cityID", cityID);
+    query.bindValue(":cityName", cityName);
+
+    bool ok = query.exec();
+    if (!ok) {
+        qDebug() << query.lastQuery() << query.lastError().text();
+    }
+}
+
+bool PlacesModel::isFavorite(QString cityID)
+{
+    qDebug() << cityID;
+    if (cityID.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(m_db);
+    query.prepare("SELECT id FROM cityes WHERE cityID=:cityID");
+    query.bindValue(":cityID", cityID);
+
+    bool ok = query.exec();
+    if (!ok) {
+        qDebug() << query.lastQuery() << query.lastError().text();
+    }
+    if (query.next()) {
+        return true;
+    }
+    return false;
+}
+
+QVariantMap PlacesModel::get(int row) const
+{
+    QVariantMap res;
+    QHash<int, QByteArray> names = roleNames();
+    QHashIterator<int, QByteArray> i(names);
+    QModelIndex idx = index(row, 0);
+    while (i.hasNext()) {
+        i.next();
+        QVariant data = idx.data(i.key());
+        res[i.value()] = data;
+    }
+
+    return res;
+}
+
+void PlacesModel::removeFromFavorites(int cityID)
+{
+    if (cityID == 0) {
+        return;
+    }
+    QSqlQuery query(m_db);
+    query.prepare("DELETE FROM cityes WHERE cityID=:cityID");
+    query.bindValue(":cityID", cityID);
+
+    bool ok = query.exec();
+    if (!ok) {
+        qDebug() << query.lastQuery() << query.lastError().text();
+    }
+}
+
+void PlacesModel::setSearchString(QString searchString)
+{
+    if (searchString != m_searchSctring) {
+        m_searchSctring = searchString;
+        emit searchStringChanged(searchString);
+    }
+}
+
+void PlacesModel::getCityData(int index)
+{
+    m_useLocation = false;
+    emit useLocationChanged();
+
+    Place item = m_placesList.at(index);
+    QGeoCoordinate coord;
+    coord.setLatitude(item.lat);
+    coord.setLongitude(item.lon);
+
+    m_api->searchCityByCoord(coord);
 }
 
 void PlacesModel::positionUpdated(QGeoPositionInfo gpsPos)
 {
-    coord = gpsPos.coordinate();
+    m_useLocation = true;
+    emit useLocationChanged();
+
     src->stopUpdates();
-    queryCity();
-}
-
-void PlacesModel::queryCity()
-{
-    // don't update more often then once a minute
-    // to keep load on server low
-    if (throttle.isValid() && throttle.elapsed() < minMsBeforeNewRequest) {
-        qDebug() << "delaying query of city";
-        if (!delayedCityRequestTimer.isActive())
-            delayedCityRequestTimer.start();
-        return;
-    }
-    qDebug() << "requested query of city";
-    throttle.start();
-    minMsBeforeNewRequest = (nErrors + 1) * baseMsBeforeNewRequest;
-
-    QString latitude, longitude;
-    longitude.setNum(coord.longitude());
-    latitude.setNum(coord.latitude());
-
-    QUrl url("http://api.openweathermap.org/data/2.5/weather");
-    QUrlQuery query;
-    query.addQueryItem("lat", latitude);
-    query.addQueryItem("lon", longitude);
-    query.addQueryItem("mode", "json");
-    query.addQueryItem("APPID", app_ident);
-    url.setQuery(query);
-    qDebug() << "submitting request";
-
-    QNetworkReply* rep = nam->get(QNetworkRequest(url));
-    // connect up the signal right away
-    connect(rep, &QNetworkReply::finished,
-        this, [this, rep]() { handleGeoNetworkData(rep); });
+    m_api->searchCityByCoord(gpsPos.coordinate());
 }
 
 void PlacesModel::positionError(QGeoPositionInfoSource::Error e)
@@ -113,50 +193,61 @@ void PlacesModel::positionError(QGeoPositionInfoSource::Error e)
     // cleanup insufficient QGeoPositionInfoSource instance
     src->stopUpdates();
     src->deleteLater();
-    src = 0;
-
-    // activate simulation mode
-    m_city = "Brisbane";
-    emit cityChanged();
 }
 
-void PlacesModel::hadError(bool tryAgain)
+void PlacesModel::formatListFromNameSearch(QByteArray json)
 {
-    qDebug() << "hadError, will " << (tryAgain ? "" : "not ") << "rety";
-    throttle.start();
-    if (nErrors < 10)
-        ++nErrors;
-    minMsBeforeNewRequest = (nErrors + 1) * baseMsBeforeNewRequest;
-    if (tryAgain)
-        delayedCityRequestTimer.start();
+    qDebug() << Q_FUNC_INFO;
+    beginResetModel();
+    m_placesList.clear();
+    QJsonDocument document = QJsonDocument::fromJson(json);
+
+    for (int i = 0; i < document.array().count(); i++) {
+        Place place;
+        place.cityId = 0;
+        place.cityName = document.array().at(i).toObject().value("display_name").toString();
+        place.lat = document.array().at(i).toObject().value("lat").toString().toDouble();
+        place.lon = document.array().at(i).toObject().value("lon").toString().toDouble();
+
+        qDebug() << place.cityId << place.cityName << place.lat << place.lon;
+
+        m_placesList.push_back(place);
+    }
+    endResetModel();
 }
 
-void PlacesModel::handleGeoNetworkData(QNetworkReply* networkReply)
+void PlacesModel::formatListFromDB()
 {
-    if (!networkReply) {
-        hadError(false); // should retry?
-        return;
+    beginResetModel();
+    m_placesList.clear();
+
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM cityes");
+
+    bool ok = query.exec();
+    if (!ok) {
+        qDebug() << query.lastQuery() << query.lastError().text();
     }
 
-    if (!networkReply->error()) {
-        nErrors = 0;
-        if (!throttle.isValid())
-            throttle.start();
-        minMsBeforeNewRequest = baseMsBeforeNewRequest;
-        // convert coordinates to city name
-        QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
+    while (query.next()) {
+        Place place;
+        place.cityId = query.value(2).toInt();
+        place.cityName = query.value(1).toString();
+        place.lat = 0;
+        place.lon = 0;
 
-        QJsonObject jo = document.object();
-        QJsonValue jv = jo.value(QStringLiteral("name"));
+        m_placesList.push_back(place);
+    }
 
-        const QString city = jv.toString();
-        qDebug() << "got city: " << city;
-        if (m_city != city) {
-            m_city = city;
-            emit cityChanged();
-        }
+    endResetModel();
+}
+
+void PlacesModel::loadPlaces(QString string)
+{
+    if (string.isEmpty()) {
+        // load from DB
+        formatListFromDB();
     } else {
-        hadError(true);
+        // search data
     }
-    networkReply->deleteLater();
 }

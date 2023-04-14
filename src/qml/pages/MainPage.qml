@@ -45,21 +45,27 @@ Page {
         id: main
         anchors.fill: parent
 
+        Spinner {
+            id: spinner
+            enabled: !weatherModel.hasValidWeather
+            anchors.centerIn: parent
+        }
+
         Column {
             spacing: Theme.itemSpacingExtraSmall
+            visible: weatherModel.hasValidWeather
 
             anchors {
                 fill: parent
                 margins: Theme.itemSpacingExtraSmall
             }
 
-            Rectangle {
+            Item {
                 width: parent.width
                 height: Theme.itemHeightHuge
-                color: "transparent"
 
                 Text {
-                    text: (model.hasValidCity ? model.city : "Unknown location") + (settings.places.get(settings.selectedCity).useGps ? " (GPS)" : "")
+                    text: (weatherModel.hasValidWeather ? weatherModel.city : qsTr("Search location"))
                     anchors.fill: parent
                     anchors.margins: Theme.itemSpacingLarge
 
@@ -85,24 +91,12 @@ Page {
 
                 height: 2 * (main.height - Theme.itemHeightHuge ) / 3 - 10
 
-                weatherIcon: (model.hasValidWeather
-                          ? model.weather.weatherIcon
-                          : "01d")                
-
-                tempText: (model.hasValidWeather
-                          ? model.weather.temperature
-                          : "??")
-
-                windDirectionText: (model.hasValidWeather
-                           ? model.weather.windDirection + "° "
-                           : "")
-                windSpeedText:(model.hasValidWeather
-                               ?  model.weather.windSpeed + " " + settings.speedUnitsOptions.get(settings.windUnits).shortname
-                               : "")
-
-                bottomText: (model.hasValidWeather
-                             ? model.weather.weatherDescription
-                             : qsTr("No weather data"))
+                weatherIcon: weatherModel.hasValidWeather ? weatherModel.get(0).weatherIcon : "01d"
+                temperatureMin: weatherModel.hasValidWeather ? weatherModel.get(0).temperatureMin : 0
+                temperatureMax: weatherModel.hasValidWeather ? weatherModel.get(0).temperatureMax : 0
+                windDirection: (weatherModel.hasValidWeather ? weatherModel.get(0).windDirection : 0)
+                windSpeed: (weatherModel.hasValidWeather ?  weatherModel.get(0).windSpeed : 0)
+                bottomText: (weatherModel.hasValidWeather ? weatherModel.get(0).weatherDescription : qsTr("No weather data"))
 
                 pressed: bigForecastIconMouse.pressed
 
@@ -114,7 +108,6 @@ Page {
                     }
                 }
             }
-
 
             Row {
                 id: iconRow
@@ -131,54 +124,46 @@ Page {
                     width: iconRow.iconWidth
                     height: iconRow.iconHeight
 
-                    topText: (model.hasValidWeather ?
-                              model.forecast[0].dayOfWeek : "??")
-                    bottomText: (model.hasValidWeather ?
-                                 model.forecast[0].temperature : "??/??")
-                    weatherIcon: (model.hasValidWeather ?
-                              model.forecast[0].weatherIcon : "01d")
+                    timestamp: (weatherModel.hasValidWeather ? weatherModel.get(1).dateTime : "0")
+                    temperatureMin: weatherModel.hasValidWeather ? weatherModel.get(1).temperatureMin : 0
+                    temperatureMax: weatherModel.hasValidWeather ? weatherModel.get(1).temperatureMax : 0
+                    weatherIcon: (weatherModel.hasValidWeather ?
+                                      weatherModel.get(1).weatherIcon : "01d")
                 }
                 ForecastIcon {
                     id: forecast2
                     width: iconRow.iconWidth
                     height: iconRow.iconHeight
 
-                    topText: (model.hasValidWeather ?
-                              model.forecast[1].dayOfWeek : "??")
-                    bottomText: (model.hasValidWeather ?
-                                 model.forecast[1].temperature : "??/??")
-                    weatherIcon: (model.hasValidWeather ?
-                              model.forecast[1].weatherIcon : "01d")
+                    timestamp: (weatherModel.hasValidWeather ? weatherModel.get(2).dateTime : "0")
+                    temperatureMin: weatherModel.hasValidWeather ? weatherModel.get(2).temperatureMin : 0
+                    temperatureMax: weatherModel.hasValidWeather ? weatherModel.get(2).temperatureMax : 0
+                    weatherIcon: (weatherModel.hasValidWeather ?
+                                      weatherModel.get(2).weatherIcon : "01d")
                 }
                 ForecastIcon {
                     id: forecast3
                     width: iconRow.iconWidth
                     height: iconRow.iconHeight
 
-                    topText: (model.hasValidWeather ?
-                              model.forecast[2].dayOfWeek : "??")
-                    bottomText: (model.hasValidWeather ?
-                                 model.forecast[2].temperature : "??/??")
-                    weatherIcon: (model.hasValidWeather ?
-                              model.forecast[2].weatherIcon : "01d")
+                    timestamp: (weatherModel.hasValidWeather ? weatherModel.get(3).dateTime : "0")
+                    temperatureMin: weatherModel.hasValidWeather ? weatherModel.get(3).temperatureMin : 0
+                    temperatureMax: weatherModel.hasValidWeather ? weatherModel.get(3).temperatureMax : 0
+                    weatherIcon: (weatherModel.hasValidWeather ?
+                                      weatherModel.get(3).weatherIcon : "01d")
                 }
                 ForecastIcon {
                     id: forecast4
                     width: iconRow.iconWidth
                     height: iconRow.iconHeight
 
-                    topText: (model.hasValidWeather ?
-                              model.forecast[3].dayOfWeek : "??")
-                    bottomText: (model.hasValidWeather ?
-                                 model.forecast[3].temperature : "??/??")
-                    weatherIcon: (model.hasValidWeather ?
-                              model.forecast[3].weatherIcon : "01d")
+                    timestamp: (weatherModel.hasValidWeather ? weatherModel.get(4).dateTime : "0")
+                    temperatureMin: weatherModel.hasValidWeather ? weatherModel.get(4).temperatureMin : 0
+                    temperatureMax: weatherModel.hasValidWeather ? weatherModel.get(4).temperatureMax : 0
+                    weatherIcon: (weatherModel.hasValidWeather ?
+                                      weatherModel.get(4).weatherIcon : "01d")
                 }
-
             }
         }
     }
-
-
-
 }

@@ -53,20 +53,26 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Nemo 1.0
 import QtQuick.Controls.Styles.Nemo 1.0
 
-//Item {
-Rectangle {
+Item {
     id: current
 
-    color: "transparent"
+    property var temperatureMin
+    property var temperatureMax
 
+    property int windDirection
+    property var windSpeed
 
-    property string tempText: "20°"
-    property string windDirectionText: ""
-    property string windSpeedText: ""
     property string bottomText: "Mostly cloudy"
     property string weatherIcon: "01d"
     property real smallSide: (current.width < current.height ? current.width : current.height)
     property bool pressed: false;
+
+    function formatTemp() {
+        return weatherModel.niceTemperatureString(settings.temperatureUnits , temperatureMin)
+                + "/ "
+                + weatherModel.niceTemperatureString(settings.temperatureUnits, temperatureMax)
+                + settings.temperatureUnitsOptions.get(settings.temperatureUnits).shortname
+    }
 
     Column {
         id: textColumn
@@ -80,18 +86,18 @@ Rectangle {
         width: parent.width/3
 
         Text {
-            text: current.tempText
+            text: formatTemp()
             color: pressed ? Theme.accentColor : Theme.textColor
             font.pixelSize: Theme.fontSizeExtraLarge * 3
         }
         Text {
-            text: current.windDirectionText
+            text: current.windDirection + "° "
             font.pixelSize: Theme.fontSizeExtraLarge
             color: pressed ? Theme.accentColor : Theme.textColor
 
         }
         Text {
-            text: current.windSpeedText
+            text: weatherModel.speedConvert(settings.windUnits, current.windSpeed) + " " + settings.speedUnitsOptions.get(settings.windUnits).shortname
             color: pressed ? Theme.accentColor : Theme.textColor
             font.pixelSize: Theme.fontSizeExtraLarge
         }
