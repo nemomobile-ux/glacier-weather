@@ -10,8 +10,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/pages/MainPage.qml" line="93"/>
-        <location filename="../src/qml/pages/MainPage.qml" line="93"/>
+        <location filename="../src/qml/pages/MainPage.qml" line="68"/>
+        <location filename="../src/qml/pages/MainPage.qml" line="68"/>
+        <source>Search location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qml/pages/MainPage.qml" line="99"/>
+        <location filename="../src/qml/pages/MainPage.qml" line="99"/>
         <source>No weather data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -58,17 +64,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="90"/>
+        <location filename="../src/main.cpp" line="87"/>
         <source>Weather</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SettingsPage</name>
-    <message>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="15"/>
-        <location filename="../src/qml/pages/SettingsPage.qml" line="15"/>
-        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -159,8 +156,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qml/components/WeatherSettings.qml" line="134"/>
-        <location filename="../src/qml/components/WeatherSettings.qml" line="134"/>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="140"/>
+        <location filename="../src/qml/components/WeatherSettings.qml" line="140"/>
         <source>Current position</source>
         <translation type="unfinished"></translation>
     </message>
