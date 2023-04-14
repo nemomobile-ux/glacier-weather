@@ -97,7 +97,7 @@ Item {
 
         }
         Text {
-            text: weatherModel.speedConvert(settings.windUnits, current.windSpeed) + " " + settings.speedUnitsOptions.get(settings.windUnits).shortname
+            text: Number(weatherModel.speedConvert(settings.windUnits, current.windSpeed)).toFixed(2) + " " + settings.speedUnitsOptions.get(settings.windUnits).shortname
             color: pressed ? Theme.accentColor : Theme.textColor
             font.pixelSize: Theme.fontSizeExtraLarge
         }
