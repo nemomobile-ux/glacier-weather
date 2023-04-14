@@ -59,8 +59,7 @@ Item {
     property string weatherIcon: "01d"
 
     function getDay(timestamp) {
-        var days = [qsTr('Sun'),qsTr('Mon'),qsTr('Tue'),qsTr('Wed'),qsTr('Thu'),qsTr('Fri'),qsTr('Sat')];
-        return days[new Date(timestamp * 1000).getDay()];
+        return Qt.locale().dayName( new Date(timestamp * 1000).getDay() , Locale.ShortFormat)
     }
 
     function formatTemp() {
