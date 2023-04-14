@@ -65,7 +65,7 @@ Item {
 
     function formatTemp() {
         return weatherModel.niceTemperatureString(settings.temperatureUnits , temperatureMin)
-                + "/ "
+                + " / "
                 + weatherModel.niceTemperatureString(settings.temperatureUnits, temperatureMax)
                 + settings.temperatureUnitsOptions.get(settings.temperatureUnits).shortname
     }
