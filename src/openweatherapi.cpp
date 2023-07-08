@@ -1,8 +1,6 @@
 #include "openweatherapi.h"
 #include "weatherdata.h"
 
-#include <qnetworkconfigmanager.h>
-
 #include <QElapsedTimer>
 #include <QJsonArray>
 #include <QJsonDocument>

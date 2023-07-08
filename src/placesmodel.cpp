@@ -2,7 +2,6 @@
 #include <qgeopositioninfo.h>
 #include <qgeopositioninfosource.h>
 #include <qgeosatelliteinfosource.h>
-#include <qnetworkconfigmanager.h>
 #include <qnmeapositioninfosource.h>
 
 #include <QElapsedTimer>

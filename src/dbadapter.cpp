@@ -11,8 +11,8 @@ dbAdapter::dbAdapter(QObject* parent)
     : QObject(parent)
 {
     QMutexLocker locker(&lock);
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-    cacheDir.mkpath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    cacheDir.mkpath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 
     loadDB();
 }
@@ -60,7 +60,7 @@ void dbAdapter::initDB(QSqlDatabase db)
 
 void dbAdapter::loadDB()
 {
-    const QString dbPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/db.sql";
+    const QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/db.sql";
     const QString threadAddress = QLatin1String("0x") + QString::number((quintptr)QThread::currentThreadId(), 16);
 
     QSqlDatabase db = QSqlDatabase::database(threadAddress);

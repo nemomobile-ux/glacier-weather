@@ -1,11 +1,8 @@
-import QtQuick 2.6
+import QtQuick
+import Nemo.Controls
+import Nemo.Dialogs
 
-import QtQuick.Controls 1.0
-import QtQuick.Controls.Nemo 1.0
-import QtQuick.Controls.Styles.Nemo 1.0
-import Nemo.Dialogs 1.0
-
-import WeatherInfo 1.0
+import WeatherInfo
 
 import "../components"
 

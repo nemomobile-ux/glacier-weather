@@ -8,16 +8,16 @@ set(SRC
     weathermodel.cpp
 )
 
-qtquick_compiler_add_resources(RESOURCES qml/glacier-weather.qrc)
+qt_add_resources(RESOURCES qml/glacier-weather.qrc)
 
 add_executable(glacier-weather ${SRC} ${RESOURCES})
 
 target_link_libraries(glacier-weather
-	Qt5::Gui
-	Qt5::Qml
-	Qt5::Quick
-	Qt5::Positioning
-        Qt5::Sql
+	Qt6::Gui
+	Qt6::Qml
+	Qt6::Quick
+	Qt6::Positioning
+        Qt6::Sql
 	Glacier::App)
 
 install(TARGETS glacier-weather RUNTIME
