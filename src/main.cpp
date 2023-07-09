@@ -71,13 +71,13 @@ int main(int argc, char* argv[])
     QGuiApplication* app = GlacierApp::app(argc, argv);
     app->setOrganizationName("NemoMobile");
 
-    QScreen* sc = app->primaryScreen();
-    if (sc) {
-        sc->setOrientationUpdateMask(Qt::LandscapeOrientation
-            | Qt::PortraitOrientation
-            | Qt::InvertedLandscapeOrientation
-            | Qt::InvertedPortraitOrientation);
-    }
+    //    QScreen* sc = app->primaryScreen();
+    //    if (sc) {
+    //        sc->setOrientationUpdateMask(Qt::LandscapeOrientation
+    //            | Qt::PortraitOrientation
+    //            | Qt::InvertedLandscapeOrientation
+    //            | Qt::InvertedPortraitOrientation);
+    //    }
 
     qmlRegisterType<WeatherModel>("WeatherInfo", 1, 0, "WeatherModel");
     qmlRegisterType<PlacesModel>("WeatherInfo", 1, 0, "PlacesModel");
