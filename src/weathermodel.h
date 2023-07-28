@@ -27,6 +27,8 @@ public:
     Q_INVOKABLE QString niceTemperatureString(int temperatureUnits, double t);
     Q_INVOKABLE double speedConvert(int units, double s);
 
+    Q_INVOKABLE void loadWeatherFromAPI();
+
 signals:
     void cityChanged();
     void hasValidWeatherChanged();
@@ -41,7 +43,6 @@ private:
     QSqlDatabase m_db;
 
     void loadWeatherFromDB();
-    void loadWeatherFromAPI();
 };
 
 #endif // WEATHERMODEL_H

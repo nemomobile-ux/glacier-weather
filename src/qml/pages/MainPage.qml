@@ -102,7 +102,7 @@ Page {
                     id: bigForecastIconMouse;
                     anchors.fill: parent
                     onClicked: {
-                        model.refreshWeather()
+                        weatherModel.loadWeatherFromAPI()
                     }
                 }
             }
