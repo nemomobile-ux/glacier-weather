@@ -14,7 +14,7 @@ Page {
             ToolButton {
                 iconSource: "image://theme/map"
                 onClicked: {
-                    mainPage.Stack.view.push(Qt.resolvedUrl("PlacesPage.qml"), {settingsObject: settings})
+                    window.pageStack.push(Qt.resolvedUrl("PlacesPage.qml"), {settingsObject: settings})
                 }
             }
         ]

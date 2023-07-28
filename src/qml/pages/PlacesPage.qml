@@ -107,7 +107,7 @@ Page {
             ]
             onClicked: {
                 settingsObject.selectedCity = city;
-                mainPage.pageStack.pop();
+                window.pageStack.pop();
             }
 
         }
