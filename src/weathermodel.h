@@ -1,7 +1,7 @@
 #ifndef WEATHERMODEL_H
 #define WEATHERMODEL_H
 
-#include "openweatherapi.h"
+#include "weatherapi.h"
 #include "weatherdata.h"
 #include <QAbstractListModel>
 
@@ -37,10 +37,8 @@ signals:
 private:
     QHash<int, QByteArray> m_hash;
     QString m_city;
-
-    QList<WeatherData*> m_weatcherList;
-    OpenWeatherAPI* m_api;
-    QSqlDatabase m_db;
+    WeatherAPI* m_weatherAPI;
+    QList<WeatherData> m_weatcherList;
 
     void loadWeatherFromDB();
 };

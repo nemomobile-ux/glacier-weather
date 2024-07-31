@@ -57,6 +57,7 @@ void OpenWeatherAPI::handleForecastNetworkData(QNetworkReply* networkReply, QStr
 {
     qDebug() << "got forecast";
     if (!networkReply) {
+        qDebug() << "no network reply";
         return;
     }
 
@@ -99,6 +100,7 @@ void OpenWeatherAPI::handleForecastNetworkData(QNetworkReply* networkReply, QStr
 
         emit weatherChanged();
     } else {
+        qDebug() << "some error" << networkReply->errorString();
         emit networkDataError(forecastCityName, networkReply->errorString());
 
         if (networkReply->errorString().contains("Not Found")) {

@@ -1,19 +1,52 @@
 #include "weatherdata.h"
+#include "dbadapter.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QSqlQuery>
+#include <QJsonArray>
+#include <QSqlError>
 
 WeatherData::WeatherData(int id)
     : m_id(id)
 {
-    m_db = dbAdapter::instance().getDatabase();
-
     if (id != 0) {
         // LOAD DATA FROM DB
         getWeatherByID(m_id);
     }
     connect(this, &WeatherData::dataChanged, this, &WeatherData::update);
+}
+
+WeatherData::WeatherData(const WeatherData &other)
+{
+    m_id = other.id();
+    m_cityName = other.cityName();
+    m_cityID = other.cityID();
+    m_dateTime = other.dateTime();
+    m_weatherIcon = other.weatherIcon();
+    m_weatherDescription = other.weatherDescription();
+    m_temperatureMin= other.temperatureMin();
+    m_temperatureMax = other.temperatureMax();
+    m_windSpeed = other.windSpeed();
+    m_windGusts = other.windGusts();
+    m_windDirection = other.windDirection();
+}
+
+WeatherData &WeatherData::operator=(const WeatherData &other)
+{
+    m_id = other.id();
+    m_cityName = other.cityName();
+    m_cityID = other.cityID();
+    m_dateTime = other.dateTime();
+    m_weatherIcon = other.weatherIcon();
+    m_weatherDescription = other.weatherDescription();
+    m_temperatureMin= other.temperatureMin();
+    m_temperatureMax = other.temperatureMax();
+    m_windSpeed = other.windSpeed();
+    m_windGusts = other.windGusts();
+    m_windDirection = other.windDirection();
+
+    return *this;
 }
 
 void WeatherData::setData(QJsonObject forecast)
@@ -63,6 +96,11 @@ void WeatherData::setData(QJsonObject forecast)
 bool WeatherData::isValid()
 {
     return (m_cityID != 0);
+}
+
+int WeatherData::id() const
+{
+    return m_id;
 }
 
 QString WeatherData::cityName() const
@@ -206,7 +244,7 @@ void WeatherData::setWindDirection(const int& value)
 
 void WeatherData::getWeatherByDateTime(int dateTime)
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(dbAdapter::instance().getDatabase());
     query.prepare("SELECT * FROM weather WHERE dateTime=:dateTime");
     query.bindValue(":dateTime", dateTime);
 
@@ -232,7 +270,7 @@ void WeatherData::getWeatherByDateTime(int dateTime)
 
 void WeatherData::getWeatherByID(int id)
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(dbAdapter::instance().getDatabase());
     query.prepare("SELECT * FROM weather WHERE id=:id");
     query.bindValue(":id", id);
 
@@ -257,7 +295,7 @@ void WeatherData::getWeatherByID(int id)
 
 void WeatherData::insert()
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(dbAdapter::instance().getDatabase());
     query.prepare("INSERT INTO weather (`cityName`,`cityID`,`dateTime`,`weatherIcon`,`weatherDescription`,`temperatureMin`,`temperatureMax`,`windSpeed`,`windGusts`,`windDirection`)"
                   "VALUES (:cityName, :cityID, :dateTime, :weatherIcon, :weatherDescription, :temperatureMin, :temperatureMax, :windSpeed, :windGusts, :windDirection)");
     query.bindValue(":cityName", m_cityName);
@@ -281,7 +319,7 @@ void WeatherData::insert()
 
 void WeatherData::update()
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(dbAdapter::instance().getDatabase());
     query.prepare("UPDATE weather SET cityName=:CityName"
                   ", cityID=:CityID"
                   ", dateTime=:DateTime"

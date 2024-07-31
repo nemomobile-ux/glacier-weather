@@ -10,21 +10,14 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
+#include <QAbstractItemModel>
 
-#include "openweatherapi.h"
+#include <weatherapi.h>
 
 class PlacesModel : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(QString searchString READ searchString WRITE setSearchString NOTIFY searchStringChanged)
     Q_PROPERTY(bool useLocation READ useLocation NOTIFY useLocationChanged)
-
-    struct Place {
-        int dbID;
-        int cityId;
-        QString cityName;
-        double lat;
-        double lon;
-    };
 
 public:
     explicit PlacesModel(QObject* parent = nullptr);
@@ -58,18 +51,17 @@ public slots:
     void positionError(QGeoPositionInfoSource::Error e);
 
 private slots:
-    void formatListFromNameSearch(QByteArray json);
+    void formatListFromNameSearch(QList<WeatherAPI::Place> places);
     void formatListFromDB();
 
 private:
     void loadPlaces(QString string);
 
-    QSqlDatabase m_db;
-    OpenWeatherAPI* m_api;
+    WeatherAPI* m_weatherAPI;
     QGeoPositionInfoSource* src;
 
     QHash<int, QByteArray> m_hash;
-    QList<Place> m_placesList;
+    QList<WeatherAPI::Place> m_placesList;
 
     QString m_searchSctring;
     bool m_useLocation;

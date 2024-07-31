@@ -6,10 +6,9 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtQml/QQmlListProperty>
 
-#include "dbadapter.h"
-
 class WeatherData : public QObject {
     Q_OBJECT
+    Q_PROPERTY(int id READ id CONSTANT)
     Q_PROPERTY(QString cityName READ cityName WRITE setCityName NOTIFY dataChanged)
     Q_PROPERTY(int cityID READ cityID WRITE setCityID NOTIFY dataChanged)
     Q_PROPERTY(int dateTime READ dateTime WRITE setDateTime NOTIFY dataChanged)
@@ -24,10 +23,14 @@ class WeatherData : public QObject {
 
 public:
     explicit WeatherData(int id);
+    WeatherData(const WeatherData& other);
+    WeatherData& operator=(const WeatherData& other);
+
     void setData(QJsonObject forecast);
 
     bool isValid();
 
+    int id() const;
     QString cityName() const;
     int cityID() const;
     int dateTime() const;
@@ -70,7 +73,5 @@ private:
     double m_windSpeed;
     double m_windGusts;
     int m_windDirection;
-
-    QSqlDatabase m_db;
 };
 #endif // WEATHERDATA_H

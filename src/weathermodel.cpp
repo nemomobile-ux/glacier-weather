@@ -2,6 +2,7 @@
 
 WeatherModel::WeatherModel(QObject* parent)
     : QAbstractListModel(parent)
+    , m_weatherAPI(new WeatherAPI())
 {
     m_hash.insert(Qt::UserRole, QByteArray("cityName"));
     m_hash.insert(Qt::UserRole + 1, QByteArray("cityID"));
@@ -14,13 +15,10 @@ WeatherModel::WeatherModel(QObject* parent)
     m_hash.insert(Qt::UserRole + 8, QByteArray("windGusts"));
     m_hash.insert(Qt::UserRole + 9, QByteArray("windDirection"));
 
-    m_db = dbAdapter::instance().getDatabase();
-    m_api = new OpenWeatherAPI();
-
     connect(this, &WeatherModel::cityChanged, this, &WeatherModel::loadWeatherFromDB);
     connect(this, &WeatherModel::cityChanged, this, &WeatherModel::loadWeatherFromAPI);
-    connect(m_api, &OpenWeatherAPI::weatherChanged, this, &WeatherModel::loadWeatherFromDB);
-    connect(m_api, &OpenWeatherAPI::cityNotFound, this, &WeatherModel::cityNotFound);
+    connect(m_weatherAPI, &WeatherAPI::weatherChanged, this, &WeatherModel::loadWeatherFromDB);
+    connect(m_weatherAPI, &WeatherAPI::cityNotFound, this, &WeatherModel::cityNotFound);
 }
 
 int WeatherModel::rowCount(const QModelIndex& parent) const
@@ -37,28 +35,28 @@ QVariant WeatherModel::data(const QModelIndex& index, int role) const
     if (index.row() >= m_weatcherList.size())
         return QVariant();
 
-    WeatherData* item = m_weatcherList.at(index.row());
+    WeatherData item(index.row());
     switch (role) {
     case Qt::UserRole:
-        return item->cityName();
+        return item.cityName();
     case Qt::UserRole + 1:
-        return item->cityID();
+        return item.cityID();
     case Qt::UserRole + 2:
-        return item->dateTime();
+        return item.dateTime();
     case Qt::UserRole + 3:
-        return item->weatherIcon();
+        return item.weatherIcon();
     case Qt::UserRole + 4:
-        return item->weatherDescription();
+        return item.weatherDescription();
     case Qt::UserRole + 5:
-        return item->temperatureMin();
+        return item.temperatureMin();
     case Qt::UserRole + 6:
-        return item->temperatureMax();
+        return item.temperatureMax();
     case Qt::UserRole + 7:
-        return item->windSpeed();
+        return item.windSpeed();
     case Qt::UserRole + 8:
-        return item->windGusts();
+        return item.windGusts();
     case Qt::UserRole + 9:
-        return item->windDirection();
+        return item.windDirection();
     default:
         return QVariant();
     }
@@ -131,28 +129,12 @@ void WeatherModel::loadWeatherFromDB()
     }
 
     beginResetModel();
-    m_weatcherList.clear();
-    QSqlQuery query(m_db);
-    query.prepare("SELECT id FROM weather WHERE cityName=:City ORDER BY datetime DESC");
-    query.bindValue(":City", m_city);
-
-    bool ok = query.exec();
-    if (!ok) {
-        qDebug() << query.lastQuery() << query.lastError().text();
-    }
-
-    while (query.next()) {
-        WeatherData* weatcher = new WeatherData(query.value(0).toInt());
-        if (weatcher->isValid()) {
-            m_weatcherList.push_back(weatcher);
-        }
-    }
-
+    m_weatcherList = m_weatherAPI->localCityWatcher(m_city);
     endResetModel();
     emit hasValidWeatherChanged();
 }
 
 void WeatherModel::loadWeatherFromAPI()
 {
-    m_api->refreshWeather(m_city);
+    m_weatherAPI->refreshWeather(m_city);
 }

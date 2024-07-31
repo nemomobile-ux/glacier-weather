@@ -2,8 +2,11 @@
 #define DBADAPTER_H
 
 #include <QObject>
-#include <QSqlQueryModel>
-#include <QtSql>
+#include <QMutex>
+#include <QSqlQuery>
+
+class QSqlQueryModel;
+class QSqlDatabase;
 
 class dbAdapter : public QObject {
     Q_OBJECT
