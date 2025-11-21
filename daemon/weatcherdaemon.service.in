@@ -1,0 +1,8 @@
+[Unit]
+Description=Glacier weatcher daemon
+Requires=dbus.socket lipstick.service
+After=dbus.socket lipstick.service
+
+[Service]
+Type=oneshot
+ExecStart=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/weatherdaemon

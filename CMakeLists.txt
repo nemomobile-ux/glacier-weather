@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(glacier-weather
 	VERSION 0.1.2
@@ -18,6 +18,7 @@ find_package(Qt6 COMPONENTS Gui Qml Quick Sql Positioning LinguistTools REQUIRED
 find_package(Glacier 0.9.0 COMPONENTS App REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(daemon)
 add_subdirectory(lib)
 
 # Translations

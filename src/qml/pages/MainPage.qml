@@ -1,4 +1,5 @@
 import QtQuick
+import Nemo
 import Nemo.Controls
 
 import "../components"
@@ -15,25 +16,6 @@ Page {
                 iconSource: "image://theme/map"
                 onClicked: {
                     window.pageStack.push(Qt.resolvedUrl("PlacesPage.qml"), {settingsObject: settings})
-                }
-            }
-        ]
-
-        drawerLevels: [
-            ButtonRow {
-                anchors.margins: Theme.itemSpacingMedium
-                currentIndex: settings.windUnits
-                model: settings.speedUnitsOptions
-                onCurrentIndexChanged: {
-                    settings.windUnits = currentIndex;
-                }
-            },
-            ButtonRow {
-                anchors.margins: Theme.itemSpacingMedium
-                currentIndex: settings.temperatureUnits
-                model: settings.temperatureUnitsOptions
-                onCurrentIndexChanged: {
-                    settings.temperatureUnits = currentIndex
                 }
             }
         ]

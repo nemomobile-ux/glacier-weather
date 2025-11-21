@@ -50,6 +50,7 @@
 
 
 import QtQuick
+import Nemo
 import Nemo.Controls
 
 import "pages"
@@ -85,7 +86,7 @@ ApplicationWindow{
     
     WeatherModel{
         id: weatherModel
-        onCityNotFound: settings.removeCity(city)
+        onCityNotFound: settings.removeCity(weatherModel.city)
     }
 
     WeatherSettings {

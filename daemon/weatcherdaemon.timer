@@ -1,0 +1,11 @@
+[Unit]
+Description=Getter of new weatcher
+Requires=weatcherdaemon.service
+
+[Timer]
+Unit=weatcherdaemon.service
+OnBootSec=3min
+OnUnitActiveSec=1h
+
+[Install]
+WantedBy=timers.target

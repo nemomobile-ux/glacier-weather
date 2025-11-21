@@ -29,49 +29,29 @@
 **
 ****************************************************************************************/
 
-#ifndef WEATHERMODEL_H
-#define WEATHERMODEL_H
+#include "weatcherupdater.h"
 
-#include "weatherapi.h"
-#include "weatherdata.h"
-#include <QAbstractListModel>
+WeatcherUpdater::WeatcherUpdater(QObject *parent)
+    : QObject{parent}
+    , m_geoSource(QGeoPositionInfoSource::createDefaultSource(0))
+{
+    if(m_geoSource) {
+        qDebug() << m_geoSource->sourceName();
+        m_geoSource->setUpdateInterval(10);
+        m_geoSource->startUpdates();
+        updateWeatcherFromGeo(m_geoSource->lastKnownPosition());
+    }
 
-#define ZERO_KELVIN 273.15
+    connect(m_geoSource, &QGeoPositionInfoSource::positionUpdated, this, &WeatcherUpdater::updateWeatcherFromGeo);
 
-class WeatherModel : public QAbstractListModel {
-    Q_OBJECT
-    Q_PROPERTY(QString city READ city WRITE setCity NOTIFY cityChanged)
-    Q_PROPERTY(bool hasValidWeather READ hasValidWeather NOTIFY hasValidWeatherChanged)
+    qDebug() << QGeoPositionInfoSource::availableSources();
+}
 
-public:
-    explicit WeatherModel(QObject* parent = nullptr);
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QVariant data(const QModelIndex& index, int role) const;
-    QHash<int, QByteArray> roleNames() const { return m_hash; }
+void WeatcherUpdater::updateWeatcherFromGeo(const QGeoPositionInfo &update)
+{
+    if(!update.isValid()) {
+        return;
+    }
 
-    QString city() { return m_city; }
-    void setCity(QString city);
-
-    Q_INVOKABLE QVariantMap get(int row) const;
-    bool hasValidWeather();
-
-    Q_INVOKABLE QString niceTemperatureString(int temperatureUnits, double t);
-    Q_INVOKABLE double speedConvert(int units, double s);
-
-    Q_INVOKABLE void loadWeatherFromAPI();
-
-signals:
-    void cityChanged();
-    void hasValidWeatherChanged();
-    void cityNotFound(QString city);
-
-private:
-    QHash<int, QByteArray> m_hash;
-    QString m_city;
-    std::shared_ptr<WeatherAPI> m_weatherAPI;
-    QList<WeatherData> m_weatcherList;
-
-    void loadWeatherFromDB();
-};
-
-#endif // WEATHERMODEL_H
+    qDebug() << update;
+}
